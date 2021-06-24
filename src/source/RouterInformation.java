@@ -171,7 +171,7 @@ public class RouterInformation {
             
                    
         //Pacote esta saindo do PE
-        } else if ((inputPacket.getInput_port() == MPSoCConfig.LOCAL1 || inputPacket.getInput_port() == MPSoCConfig.LOCAL0)){ 
+        } else if ((inputPacket.getInput_port() == MPSoCConfig.LOCAL2 || inputPacket.getInput_port() == MPSoCConfig.LOCAL1)){ 
             
             if (MPSoCConfig.TASK_TERMINATED_SERVICES.contains(inputPacket.getService())){
                 tasks.add(new TaskInformation(inputPacket.getTask_source(), "TERMINATED", inputPacket.getTime()));

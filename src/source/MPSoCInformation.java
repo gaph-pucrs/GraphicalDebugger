@@ -109,6 +109,7 @@ public final class MPSoCInformation {
                 }
             }
 
+            //Add the packet to the respective router
             RouterInformation r = PE_Information.get(packet_readed.getRouter_address());
             r.addPacket(packet_readed);
             //Update the router Information List

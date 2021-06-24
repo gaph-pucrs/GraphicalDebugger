@@ -40,45 +40,70 @@ public class MPSoCConfig {
     private int clockPeriodInNs;
     private int channel_number;
     
+    //This order cannot be changed
+    public static final int EAST1   = 0;
+    public static final int WEST1   = 1;
+    public static final int NORTH1  = 2;
+    public static final int SOUTH1  = 3;
+    public static final int LOCAL1  = 4;
+    public static final int EAST2   = 5;
+    public static final int WEST2   = 6;
+    public static final int NORTH2  = 7;
+    public static final int SOUTH2  = 8;
+    public static final int LOCAL2  = 9;
+    public static final int EAST3   = 10;
+    public static final int WEST3   = 11;
+    public static final int NORTH3  = 12;
+    public static final int SOUTH3  = 13;
+    public static final int LOCAL3  = 14;
     
-    public static final int EAST0 = 0;
-    public static final int EAST1 = 1;
-    public static final int WEST0 = 2;
-    public static final int WEST1 = 3;
-    public static final int NORTH0 = 4;
-    public static final int NORTH1 = 5;
-    public static final int SOUTH0 = 6;
-    public static final int SOUTH1 = 7;
-    public static final int LOCAL0 = 8;
-    public static final int LOCAL1 = 9;
+    public static final int NPORT = 15;
+    public static final int NPORT_PER_ROUTER = 5;
     
-    public static final int NPORT = 10;
+    public static final int NOC1 = 1;
+    public static final int NOC2 = 2;
+    public static final int NOC3 = 3;
     
-    public static final int LOW = 0x100;
-    public static final int HIGH = 0;
+    public static final int SLAVE           = 2;
+    public static final int CLUSTER_MASTER  = 1;
+    public static final int GLOBAL_MASTER   = 0;
     
-    public static final int SLAVE = 2;
-    public static final int CLUSTER_MASTER = 1;
-    public static final int GLOBAL_MASTER = 0;
+    public static final int EAST_IN_NOC1    = 0;
+    public static final int EAST_OUT_NOC1   = 1;
+    public static final int WEAST_IN_NOC1   = 2;
+    public static final int WEAST_OUT_NOC1  = 3;
+    public static final int NORTH_IN_NOC1   = 4;
+    public static final int NORTH_OUT_NOC1  = 5;
+    public static final int SOUTH_IN_NOC1   = 6;
+    public static final int SOUTH_OUT_NOC1  = 7;
+    public static final int LOCAL_IN_NOC1   = 8;
+    public static final int LOCAL_OUT_NOC1  = 9;
     
-    public static final int EAST_IN_HIGH = 0;
-    public static final int EAST_OUT_HIGH = 1;
-    public static final int WEAST_IN_HIGH = 2;
-    public static final int WEAST_OUT_HIGH = 3;
-    public static final int NORTH_IN_HIGH = 4;
-    public static final int NORTH_OUT_HIGH = 5;
-    public static final int SOUTH_IN_HIGH = 6;
-    public static final int SOUTH_OUT_HIGH = 7;
-    public static final int EAST_IN_LOW = 8;
-    public static final int EAST_OUT_LOW = 9;
-    public static final int WEAST_IN_LOW = 10;
-    public static final int WEAST_OUT_LOW = 11;
-    public static final int NORTH_IN_LOW = 12;
-    public static final int NORTH_OUT_LOW = 13;
-    public static final int SOUTH_IN_LOW = 14;
-    public static final int SOUTH_OUT_LOW = 15;
-    public static final int LOCAL_IN = 16;
-    public static final int LOCAL_OUT = 17;
+    public static final int EAST_IN_NOC2    = 10;
+    public static final int EAST_OUT_NOC2   = 11;
+    public static final int WEAST_IN_NOC2   = 12;
+    public static final int WEAST_OUT_NOC2  = 13;
+    public static final int NORTH_IN_NOC2   = 14;
+    public static final int NORTH_OUT_NOC2  = 15;
+    public static final int SOUTH_IN_NOC2   = 16;
+    public static final int SOUTH_OUT_NOC2  = 17;
+    public static final int LOCAL_IN_NOC2   = 18;
+    public static final int LOCAL_OUT_NOC2  = 19;
+    
+    public static final int EAST_IN_NOC3    = 20;
+    public static final int EAST_OUT_NOC3   = 21;
+    public static final int WEAST_IN_NOC3   = 22;
+    public static final int WEAST_OUT_NOC3  = 23;
+    public static final int NORTH_IN_NOC3   = 24;
+    public static final int NORTH_OUT_NOC3  = 25;
+    public static final int SOUTH_IN_NOC3   = 26;
+    public static final int SOUTH_OUT_NOC3  = 27;
+    public static final int LOCAL_IN_NOC3   = 28;
+    public static final int LOCAL_OUT_NOC3  = 29;
+    
+
+
+
     
     public static final int HAMILTONIAN = 0;
     public static final int XY = 1;
@@ -90,7 +115,8 @@ public class MPSoCConfig {
        
         TASK_ALLOCATION_SERVICES = new ArrayList<>();
         TASK_TERMINATED_SERVICES = new ArrayList<>();
-        this.channel_number = 2;
+        this.channel_number = 3;
+        this.globalManagerCluster = 0;
         try {
             
             RandomAccessFile platformFile = new RandomAccessFile(debugDirPath+"/platform.cfg", "r");
@@ -139,7 +165,7 @@ public class MPSoCConfig {
                     case "BEGIN_task_name_relation":
                         initializeTaskNaming(platformFile);
                         break;
-                    case "channel_number":
+                    case "noc_number":
                         channel_number = Integer.parseInt(configInfo[1]);
                         break;
                     default:
@@ -149,6 +175,10 @@ public class MPSoCConfig {
                 
                 
             }
+            
+            cluster_x = mpsoc_x;
+            cluster_y = mpsoc_y;
+                    
             
             discoveryGlobalXYPostion();
             
@@ -245,11 +275,11 @@ public class MPSoCConfig {
     
 
     public static int getChannel(int port) {
-        if (port == MPSoCConfig.LOCAL0 || port == MPSoCConfig.EAST0 || port == MPSoCConfig.NORTH0 || port == MPSoCConfig.EAST0 || port == MPSoCConfig.SOUTH0) {
-            return MPSoCConfig.HIGH;
+        if (port == MPSoCConfig.LOCAL1 || port == MPSoCConfig.EAST1 || port == MPSoCConfig.NORTH1 || port == MPSoCConfig.EAST1 || port == MPSoCConfig.SOUTH1) {
+            return MPSoCConfig.NOC2;
         }
 
-        return MPSoCConfig.LOW;
+        return MPSoCConfig.NOC1;
     }
 
     public String getStringServiceName(int service) {
@@ -341,30 +371,48 @@ public class MPSoCConfig {
         
     }
     
+    
+    public static int getNoCfromPort(int port){
+        if (port < 5)
+            return NOC1;
+        if (port < 10)
+            return NOC2;
+        return NOC3;
+    }
 
     public static String getPortString(int port) {
 
         switch (port) {
-            case MPSoCConfig.EAST0:
-                return "EAST 0";
             case MPSoCConfig.EAST1:
+                return "EAST 0";
+            case MPSoCConfig.EAST2:
                 return "EAST 1";
-            case MPSoCConfig.WEST0:
-                return "WEST 0";
+            case MPSoCConfig.EAST3:
+                return "EAST 2";
             case MPSoCConfig.WEST1:
+                return "WEST 0";
+            case MPSoCConfig.WEST2:
                 return "WEST 1";
-            case MPSoCConfig.NORTH0:
-                return "NORTH 0";
+            case MPSoCConfig.WEST3:
+                return "WEST 2";
             case MPSoCConfig.NORTH1:
+                return "NORTH 0";
+            case MPSoCConfig.NORTH2:
                 return "NORTH 1";
-            case MPSoCConfig.SOUTH0:
-                return "SOUTH 0";
+            case MPSoCConfig.NORTH3:
+                return "NORTH 2";
             case MPSoCConfig.SOUTH1:
+                return "SOUTH 0";
+            case MPSoCConfig.SOUTH2:
                 return "SOUTH 1";
-            case MPSoCConfig.LOCAL0:
-                return "LOCAL 0";
+            case MPSoCConfig.SOUTH3:
+                return "SOUTH 2";
             case MPSoCConfig.LOCAL1:
+                return "LOCAL 0";
+            case MPSoCConfig.LOCAL2:
                 return "LOCAL 1";
+            case MPSoCConfig.LOCAL3:
+                return "LOCAL 2";
         }
         return null;
     }

@@ -69,7 +69,7 @@ public final class MainFrame extends javax.swing.JFrame {
         URL url = this.getClass().getResource("/icon/gaph_logo.png");   
         this.image_icon = Toolkit.getDefaultToolkit().getImage(url);
         this.setIconImage(image_icon);
-        this.setTitle("MPSoC Debugger [v1.2]");
+        this.setTitle("MPSoC Debugger [OpenPiton-v1.0]");
         //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         taskMappingFrame = null;
         mpsocConfig = null;
@@ -988,7 +988,7 @@ public final class MainFrame extends javax.swing.JFrame {
             
             String message = null;
             
-            if (port == MPSoCConfig.LOCAL0 || port == MPSoCConfig.LOCAL1){
+            if (port == MPSoCConfig.LOCAL1 || port == MPSoCConfig.LOCAL2){
                 message = "---->>> "+packetInformation.getRouter_address()+" send message to "+packetInformation.getTarget_router()+" service "+mpsocConfig.getStringServiceName(packetInformation.getService());
             }
             
@@ -1040,6 +1040,7 @@ public final class MainFrame extends javax.swing.JFrame {
          new RouterInfoFrame(mPSoCInformation.getRouterInformation(router_address), mpsocConfig, image_icon);
     }
     
+    //This is the KEy function
     int nextPacket(boolean repaint, int limitTime) {
         
         PacketInformation packet = mPSoCInformation.getNextPacket(filter, limitTime);
@@ -1063,7 +1064,8 @@ public final class MainFrame extends javax.swing.JFrame {
             }
             
             JOptionPane.showMessageDialog(this, "ERROR: Service <" + packet.getService() + "> packet unidentified. \n"
-                        + "Router: " + router_address + " "
+                    + "Time: " + packet.getTime() + " "    
+                    + "Router: " + router_address + " "
                         + "Input port: " + MPSoCConfig.getPortString(packet.getInput_port()), "", JOptionPane.ERROR_MESSAGE);
             stopButtonActionPerformed(null);
         }
@@ -1171,58 +1173,84 @@ public final class MainFrame extends javax.swing.JFrame {
 
         if (rn.getXCoordinate(router_address) != 0) {//apagar esquerda
 
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST0) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.WEST0) * percent;
-            router.updateThroughput(MPSoCConfig.WEST0, portThroughput);
+            router.updateThroughput(MPSoCConfig.WEST1, portThroughput);
             portsThroughputCounter += portThroughput;
 
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST1) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST2) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.WEST1) * percent;
-            router.updateThroughput(MPSoCConfig.WEST1, portThroughput);
+            router.updateThroughput(MPSoCConfig.WEST2, portThroughput);
+            portsThroughputCounter += portThroughput;
+            
+            
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST3) * percent;
+            //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.WEST1) * percent;
+            router.updateThroughput(MPSoCConfig.WEST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
         if (rn.getXCoordinate(router_address) != x_dimension - 1) {//apagar direita
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST0) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.EAST0) * percent;
-            router.updateThroughput(MPSoCConfig.EAST0, portThroughput);
+            router.updateThroughput(MPSoCConfig.EAST1, portThroughput);
             portsThroughputCounter += portThroughput;
 
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST1) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST2) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.EAST1) * percent;
-            router.updateThroughput(MPSoCConfig.EAST1, portThroughput);
+            router.updateThroughput(MPSoCConfig.EAST2, portThroughput);
+            portsThroughputCounter += portThroughput;
+            
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST3) * percent;
+            //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.EAST1) * percent;
+            router.updateThroughput(MPSoCConfig.EAST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
         if (rn.getYCoordinate(router_address) != 0) {//apagar baixo
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH0) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.SOUTH0) * percent;
-            router.updateThroughput(MPSoCConfig.SOUTH0, portThroughput);
+            router.updateThroughput(MPSoCConfig.SOUTH1, portThroughput);
             portsThroughputCounter += portThroughput;
 
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH1) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH2) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.SOUTH1) * percent;
-            router.updateThroughput(MPSoCConfig.SOUTH1, portThroughput);
+            router.updateThroughput(MPSoCConfig.SOUTH2, portThroughput);
+            portsThroughputCounter += portThroughput;
+            
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH3) * percent;
+            //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.SOUTH1) * percent;
+            router.updateThroughput(MPSoCConfig.SOUTH3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
         if (rn.getYCoordinate(router_address) != y_dimension - 1) {
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH0) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.NORTH0) * percent;
-            router.updateThroughput(MPSoCConfig.NORTH0, portThroughput);
+            router.updateThroughput(MPSoCConfig.NORTH1, portThroughput);
             portsThroughputCounter += portThroughput;
 
-            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH1) * percent;
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH2) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.NORTH1) * percent;
-            router.updateThroughput(MPSoCConfig.NORTH1, portThroughput);
+            router.updateThroughput(MPSoCConfig.NORTH2, portThroughput);
+            portsThroughputCounter += portThroughput;
+            
+            portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH3) * percent;
+            //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.NORTH1) * percent;
+            router.updateThroughput(MPSoCConfig.NORTH3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
 
-        portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.LOCAL0) * percent;
+        portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.LOCAL1) * percent;
         //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.LOCAL0) * percent;
-        router.updateThroughput(MPSoCConfig.LOCAL0, portThroughput);
+        router.updateThroughput(MPSoCConfig.LOCAL1, portThroughput);
         //portsThroughputCounter += portThroughput;
 
-        portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.LOCAL1) * percent;
+        portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.LOCAL2) * percent;
         //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.LOCAL1) * percent;
-        router.updateThroughput(MPSoCConfig.LOCAL1, portThroughput);
+        router.updateThroughput(MPSoCConfig.LOCAL2, portThroughput);
+        //portsThroughputCounter += portThroughput;
+        
+        portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.LOCAL3) * percent;
+        //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.LOCAL1) * percent;
+        router.updateThroughput(MPSoCConfig.LOCAL3, portThroughput);
         //portsThroughputCounter += portThroughput;
 
         //Desnecessario
@@ -1285,75 +1313,117 @@ public final class MainFrame extends javax.swing.JFrame {
 
         neighbor = new RouterNeighbors(mpsocConfig);
 
-        if (port == MPSoCConfig.NORTH0 || port == MPSoCConfig.NORTH1) {
-            //pintar vizinho de cima
-            neighbor_label = neighbor.getVizinho_cima(roteador.getRouter_address());
-        } else if (port == MPSoCConfig.SOUTH0 || port == MPSoCConfig.SOUTH1) {
-            //pintar vizinho de baixo
-            neighbor_label = neighbor.getVizinho_baixo(roteador.getRouter_address());
-        } else if (port == MPSoCConfig.EAST0 || port == MPSoCConfig.EAST1) {
-            //pintar vizinho de direita
-            neighbor_label = neighbor.getVizinho_direita(roteador.getRouter_address());
-        } else if (port == MPSoCConfig.WEST0 || port == MPSoCConfig.WEST1) {
-            //pintar vizinho de esquerda
-            neighbor_label = neighbor.getVizinho_esquerda(roteador.getRouter_address());
+        switch (port) {
+            case MPSoCConfig.NORTH1:
+            case MPSoCConfig.NORTH2:
+            case MPSoCConfig.NORTH3:
+                //pintar vizinho de cima
+                neighbor_label = neighbor.getVizinho_cima(roteador.getRouter_address());
+                break;
+            case MPSoCConfig.SOUTH1:
+            case MPSoCConfig.SOUTH2:
+            case MPSoCConfig.SOUTH3:
+                //pintar vizinho de baixo
+                neighbor_label = neighbor.getVizinho_baixo(roteador.getRouter_address());
+                break;
+            case MPSoCConfig.EAST1:
+            case MPSoCConfig.EAST2:
+            case MPSoCConfig.EAST3:
+                //pintar vizinho de direita
+                neighbor_label = neighbor.getVizinho_direita(roteador.getRouter_address());
+                break;
+            case MPSoCConfig.WEST1:
+            case MPSoCConfig.WEST2:
+            case MPSoCConfig.WEST3:
+                //pintar vizinho de esquerda
+                neighbor_label = neighbor.getVizinho_esquerda(roteador.getRouter_address());
+                break;
+            default:
+                break;
         }
 
         switch (port) {
-            case MPSoCConfig.EAST0:
-                local_arrow = MPSoCConfig.EAST_IN_HIGH;
-                neighbor_arrow = MPSoCConfig.WEAST_OUT_HIGH;
-                break;
             case MPSoCConfig.EAST1:
-                local_arrow = MPSoCConfig.EAST_IN_LOW;
-                neighbor_arrow = MPSoCConfig.WEAST_OUT_LOW;
+                local_arrow = MPSoCConfig.EAST_IN_NOC1;
+                neighbor_arrow = MPSoCConfig.WEAST_OUT_NOC1;
                 break;
-            case MPSoCConfig.NORTH0:
-                local_arrow = MPSoCConfig.NORTH_IN_HIGH;
-                neighbor_arrow = MPSoCConfig.SOUTH_OUT_HIGH;
+            case MPSoCConfig.EAST2:
+                local_arrow = MPSoCConfig.EAST_IN_NOC2;
+                neighbor_arrow = MPSoCConfig.WEAST_OUT_NOC2;
+                break;
+            case MPSoCConfig.EAST3:
+                local_arrow = MPSoCConfig.EAST_IN_NOC3;
+                neighbor_arrow = MPSoCConfig.WEAST_OUT_NOC3;
                 break;
             case MPSoCConfig.NORTH1:
-                local_arrow = MPSoCConfig.NORTH_IN_LOW;
-                neighbor_arrow = MPSoCConfig.SOUTH_OUT_LOW;
+                local_arrow = MPSoCConfig.NORTH_IN_NOC1;
+                neighbor_arrow = MPSoCConfig.SOUTH_OUT_NOC1;
                 break;
-            case MPSoCConfig.WEST0:
-                local_arrow = MPSoCConfig.WEAST_IN_HIGH;
-                neighbor_arrow = MPSoCConfig.EAST_OUT_HIGH;
+            case MPSoCConfig.NORTH2:
+                local_arrow = MPSoCConfig.NORTH_IN_NOC2;
+                neighbor_arrow = MPSoCConfig.SOUTH_OUT_NOC2;
+                break;
+            case MPSoCConfig.NORTH3:
+                local_arrow = MPSoCConfig.NORTH_IN_NOC3;
+                neighbor_arrow = MPSoCConfig.SOUTH_OUT_NOC3;
                 break;
             case MPSoCConfig.WEST1:
-                local_arrow = MPSoCConfig.WEAST_IN_LOW;
-                neighbor_arrow = MPSoCConfig.EAST_OUT_LOW;
+                local_arrow = MPSoCConfig.WEAST_IN_NOC1;
+                neighbor_arrow = MPSoCConfig.EAST_OUT_NOC1;
                 break;
-            case MPSoCConfig.SOUTH0:
-                local_arrow = MPSoCConfig.SOUTH_IN_HIGH;
-                neighbor_arrow = MPSoCConfig.NORTH_OUT_HIGH;
+            case MPSoCConfig.WEST2:
+                local_arrow = MPSoCConfig.WEAST_IN_NOC2;
+                neighbor_arrow = MPSoCConfig.EAST_OUT_NOC2;
+                break;
+            case MPSoCConfig.WEST3:
+                local_arrow = MPSoCConfig.WEAST_IN_NOC3;
+                neighbor_arrow = MPSoCConfig.EAST_OUT_NOC3;
                 break;
             case MPSoCConfig.SOUTH1:
-                local_arrow = MPSoCConfig.SOUTH_IN_LOW;
-                neighbor_arrow = MPSoCConfig.NORTH_OUT_LOW;
+                local_arrow = MPSoCConfig.SOUTH_IN_NOC1;
+                neighbor_arrow = MPSoCConfig.NORTH_OUT_NOC1;
                 break;
-            case MPSoCConfig.LOCAL0:
-                if (unfinishedPackets <= 0)
-                    resetRouters();
-                
-                local_arrow = MPSoCConfig.LOCAL_IN;
-                
-                unfin_index = is_router_unfinished_list(roteador.getRouter_address());
-                if (unfin_index == -1)
-                    unfinishedPackets++;
-                
+            case MPSoCConfig.SOUTH2:
+                local_arrow = MPSoCConfig.SOUTH_IN_NOC2;
+                neighbor_arrow = MPSoCConfig.NORTH_OUT_NOC2;
+                break;
+            case MPSoCConfig.SOUTH3:
+                local_arrow = MPSoCConfig.SOUTH_IN_NOC3;
+                neighbor_arrow = MPSoCConfig.NORTH_OUT_NOC3;
                 break;
             case MPSoCConfig.LOCAL1:
                 if (unfinishedPackets <= 0)
                     resetRouters();
-                unfinished_packet_list.add(roteador.getRouter_address());
-                local_arrow = MPSoCConfig.LOCAL_IN;
+                
+                local_arrow = MPSoCConfig.LOCAL_IN_NOC2;
                 
                 unfin_index = is_router_unfinished_list(roteador.getRouter_address());
                 if (unfin_index == -1)
                     unfinishedPackets++;
                 
                 break;
+            case MPSoCConfig.LOCAL2:
+                if (unfinishedPackets <= 0)
+                    resetRouters();
+                unfinished_packet_list.add(roteador.getRouter_address());
+                local_arrow = MPSoCConfig.LOCAL_IN_NOC2;
+                
+                unfin_index = is_router_unfinished_list(roteador.getRouter_address());
+                if (unfin_index == -1)
+                    unfinishedPackets++;
+                
+                break;
+            case MPSoCConfig.LOCAL3:
+                if (unfinishedPackets <= 0)
+                    resetRouters();
+                unfinished_packet_list.add(roteador.getRouter_address());
+                local_arrow = MPSoCConfig.LOCAL_IN_NOC3;
+                
+                unfin_index = is_router_unfinished_list(roteador.getRouter_address());
+                if (unfin_index == -1)
+                    unfinishedPackets++;
+                
+                break;    
         }
 
         
@@ -1365,18 +1435,29 @@ public final class MainFrame extends javax.swing.JFrame {
         
         roteador.paintArrow(local_arrow);
         
+        //Teste if the packets arrived at destination
         if (roteador.getRouter_address() == target_router){
-            roteador.paintArrow(MPSoCConfig.LOCAL_OUT);
-           
+            
+            int noc = MPSoCConfig.getNoCfromPort(port);
+            switch(noc){
+                case MPSoCConfig.NOC1:
+                    roteador.paintArrow(MPSoCConfig.LOCAL_OUT_NOC1);
+                    break;
+                case MPSoCConfig.NOC2:
+                    roteador.paintArrow(MPSoCConfig.LOCAL_OUT_NOC2);
+                    break;
+                case MPSoCConfig.NOC3:
+                    roteador.paintArrow(MPSoCConfig.LOCAL_OUT_NOC3);
+                    break;
+            }
             
             unfin_index = is_router_unfinished_list(roteador.getRouter_address());
             if (unfin_index != -1){
                 unfinished_packet_list.remove(unfin_index);
                 unfinishedPackets--;
             }
-            
         }
-
+        
     }
     
     private int is_router_unfinished_list(int router_addr){

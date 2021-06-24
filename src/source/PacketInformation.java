@@ -17,43 +17,33 @@ public class PacketInformation {
     private int service;
     private int size;
     private int bandwidthCycles;
-    private int channel;
+    private int noc;
     private int input_port;
     private int target_router;
     private int task_source;
     private int task_target;
 
-    public PacketInformation(int router_address, int time, int service, int size, int bandwidthCycles, int input_port, int target_router) {
+    public PacketInformation(int router_address, int time, int service, int size, int bandwidthCycles, int noc, int input_port, int target_router) {
         this.router_address = router_address;
         this.time = time;
         this.service = service;
         this.size = size;
         this.bandwidthCycles = bandwidthCycles;
         this.input_port = input_port;
-        if(this.input_port == MPSoCConfig.LOCAL0 || this.input_port == MPSoCConfig.EAST0 || this.input_port == MPSoCConfig.NORTH0 || this.input_port == MPSoCConfig.EAST0 || this.input_port == MPSoCConfig.SOUTH0){
-            this.channel = MPSoCConfig.HIGH;
-        } else {
-            this.channel = MPSoCConfig.LOW;
-        }
+        this.noc = noc;
         this.target_router = target_router;
         this.task_source = -1;
         this.task_target = -1;
     }
 
-    public PacketInformation(int router_address, int time, int service, int size, int bandwidthCycles, int input_port, int target_router, int task_source, int task_target) {
+    public PacketInformation(int router_address, int time, int service, int size, int bandwidthCycles, int noc, int input_port, int target_router, int task_source, int task_target) {
         this.router_address = router_address;
         this.time = time;
         this.service = service;
         this.size = size;
         this.bandwidthCycles = bandwidthCycles;
         this.input_port = input_port;
-        
-        if(this.input_port == MPSoCConfig.LOCAL0 || this.input_port == MPSoCConfig.EAST0 || this.input_port == MPSoCConfig.NORTH0 || this.input_port == MPSoCConfig.EAST0 || this.input_port == MPSoCConfig.SOUTH0){
-            this.channel = MPSoCConfig.HIGH;
-        } else {
-            this.channel = MPSoCConfig.LOW;
-        }
-        
+        this.noc = noc;
         this.target_router = target_router;
         this.task_source = task_source;
         this.task_target = task_target;
@@ -66,7 +56,7 @@ public class PacketInformation {
         System.out.println("service: "+service);
         System.out.println("size: "+size);
         System.out.println("bandwidth cycles: "+bandwidthCycles);
-        System.out.println("channel: "+channel);
+        System.out.println("channel: "+noc);
         System.out.println("input_port: "+input_port);
         System.out.println("target_router: "+target_router);
         System.out.println("task_source: "+task_source);
@@ -98,11 +88,11 @@ public class PacketInformation {
     }
 
     public int getChannel() {
-        return channel;
+        return noc;
     }
 
     public void setChannel(int channel) {
-        this.channel = channel;
+        this.noc = channel;
     }
 
     public int getInput_port() {
@@ -111,10 +101,12 @@ public class PacketInformation {
     
     public String getInput_portString(){
         switch(input_port){
-            case MPSoCConfig.LOW:
+            case MPSoCConfig.NOC1:
                 return "LOW";
-            case MPSoCConfig.HIGH:
+            case MPSoCConfig.NOC2:
                 return "HIGH";
+            case MPSoCConfig.NOC3:
+                return "NOC2";
         }
         return null;
     }

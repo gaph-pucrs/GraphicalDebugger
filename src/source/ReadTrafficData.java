@@ -116,6 +116,7 @@ public final class ReadTrafficData {
         int target_router = 0;
         int task_source = -1;
         int task_target = -1;
+        int noc = -1;
 
         String[] splitedLine = line.split("\t");
         
@@ -126,21 +127,18 @@ public final class ReadTrafficData {
             service = Integer.parseInt(splitedLine[2]);
             size = Integer.parseInt(splitedLine[3]);
             bandwidthCycles = Integer.parseInt(splitedLine[4]);
+            noc = extractNoC(splitedLine[5]);
+            input_port = extractInputPort(splitedLine[6], noc);
+            target_router = extractRouterAddress(splitedLine[7]);
 
-            if (mPSoCConfig.getChannel_number() == 1)
-                input_port = ((Integer.parseInt(splitedLine[5])) * 2) + 1 ; //Duplicated phsysical channel support
-            else//Assuming always 2
-                input_port = ((Integer.parseInt(splitedLine[5])));
-            target_router = extractRouterAddress(splitedLine[6]);
-
-            if (splitedLine.length > 7){
+            /*if (splitedLine.length > 7){ //Maybe do this latter
                 task_source = Integer.parseInt(splitedLine[7]);
                 if (splitedLine.length > 8){
                     task_target = Integer.parseInt(splitedLine[8]);
                 }
-            }
+            }*/
 
-            return new PacketInformation(router_address, time, service, size, bandwidthCycles, input_port, target_router, task_source, task_target);
+            return new PacketInformation(router_address, time, service, size, bandwidthCycles, noc, input_port, target_router, task_source, task_target);
 
         } catch (Exception e){
             System.out.println("WARNING: Wrong packet format at time "+time+" of traffic_router.txt");
@@ -148,6 +146,60 @@ public final class ReadTrafficData {
         
         return null;
 
+    }
+    
+    private int extractNoC(String noc){
+        int nocRet = -1;
+        switch(noc){
+            case "1":
+                nocRet = MPSoCConfig.NOC1;
+                break;
+            case "2":
+                nocRet = MPSoCConfig.NOC2;
+                break;
+            case "3":
+                nocRet = MPSoCConfig.NOC3;
+                break;
+            default:
+                System.out.println("Error: wrong NoC from traffic_router.txt");
+        }
+        return nocRet;
+    }
+    
+    
+    /*
+#define EAST 	0
+#define WEST 	1
+#define NORTH 	2
+#define SOUTH 	3
+#define LOCAL 	4
+#define NPORT 	5
+    */
+    private int extractInputPort(String inport, int noc){
+        int port = -1;
+        switch(inport){
+            case "E":
+                port = 0;
+                break;
+            case "W":
+                port = 1;
+                break;
+            case "N":
+                port = 2;
+                break;
+            case "S":
+                port = 3;
+                break;
+            case "L":
+                port = 4;
+                break;
+            default:
+                System.out.println("Error: wrong input port");
+        }
+        
+        port = port + ((noc-1)*MPSoCConfig.NPORT_PER_ROUTER);
+        
+        return port;
     }
     
     private int extractRouterAddress(String value){
