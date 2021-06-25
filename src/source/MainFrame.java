@@ -1402,7 +1402,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 if (unfinishedPackets <= 0)
                     resetRouters();
                 
-                local_arrow = MPSoCConfig.LOCAL_IN_NOC2;
+                local_arrow = MPSoCConfig.LOCAL_IN_NOC1;
                 
                 unfin_index = is_router_unfinished_list(roteador.getRouter_address());
                 if (unfin_index == -1)

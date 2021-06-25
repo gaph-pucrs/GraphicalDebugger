@@ -37,6 +37,71 @@ public class Roteador extends javax.swing.JPanel {
         else
             routerLabel.setText(this.mPSoCConfig.HamAdressToXYLabel(this.router_address));
         //removeCornersArrows();
+        routerLabel.setToolTipText("XY router address");
+        noc1_label.setToolTipText("NoC 1");
+        noc2_label.setToolTipText("NoC 2");
+        noc3_label.setToolTipText("NoC 3");
+        l15_label.setToolTipText("L1.5 interface with router: -UP arrows are inputs to router -DOWN arrows are output from router]");
+        l2_label.setToolTipText("L2 interface with router: -UP arrows are inputs to router -DOWN arrows are output from router]");
+
+        
+        south_NoC1_Label.setToolTipText("Link utilization percentage");
+        south_NoC2_Label.setToolTipText("Link utilization percentage");
+        south_NoC3_Label.setToolTipText("Link utilization percentage");
+        north_NoC1_Label.setToolTipText("Link utilization percentage");
+        north_NoC2_Label.setToolTipText("Link utilization percentage");
+        north_NoC3_Label.setToolTipText("Link utilization percentage");
+        weast_NoC1_Label.setToolTipText("Link utilization percentage");
+        weast_NoC2_Label.setToolTipText("Link utilization percentage");
+        weast_NoC3_Label.setToolTipText("Link utilization percentage");
+        east_NoC1_Label.setToolTipText("Link utilization percentage");
+        east_NoC2_Label.setToolTipText("Link utilization percentage");
+        east_NoC3_Label.setToolTipText("Link utilization percentage");
+        local_NoC1_Label.setToolTipText("Link utilization percentage");
+        local_NoC2_Label.setToolTipText("Link utilization percentage");
+        local_NoC3_Label.setToolTipText("Link utilization percentage");
+        
+        
+        local_NoC1_out.setToolTipText("NoC1: local router output");
+        local_NoC2_out.setToolTipText("NoC2: local router output");
+        local_NoC3_out.setToolTipText("NoC3: local router output");
+        
+        local_NoC1_in.setToolTipText("NoC1: local router input");
+        local_NoC2_in.setToolTipText("NoC2: local router input");
+        local_NoC3_in.setToolTipText("NoC3: local router input");
+        
+        out_east_NoC1.setToolTipText("NoC1");
+        out_east_NoC2.setToolTipText("NoC2");
+        out_east_NoC3.setToolTipText("NoC3");
+        
+        out_weast_NoC1.setToolTipText("NoC1");
+        out_weast_NoC2.setToolTipText("NoC2");
+        out_weast_NoC3.setToolTipText("NoC3");
+        
+        out_south_NoC1.setToolTipText("NoC1");
+        out_south_NoC2.setToolTipText("NoC2");
+        out_south_NoC3.setToolTipText("NoC3");
+        
+        out_north_NoC1.setToolTipText("NoC1");
+        out_north_NoC2.setToolTipText("NoC2");
+        out_north_NoC3.setToolTipText("NoC3");
+        
+        in_east_NoC1.setToolTipText("NoC1");
+        in_east_NoC2.setToolTipText("NoC2");
+        in_east_NoC3.setToolTipText("NoC3");
+        
+        in_weast_NoC1.setToolTipText("NoC1");
+        in_weast_NoC2.setToolTipText("NoC2");
+        in_weast_NoC3.setToolTipText("NoC3");
+        
+        in_south_NoC1.setToolTipText("NoC1");
+        in_south_NoC2.setToolTipText("NoC2");
+        in_south_NoC3.setToolTipText("NoC3");
+        
+        in_north_NoC1.setToolTipText("NoC1");
+        in_north_NoC2.setToolTipText("NoC2");
+        in_north_NoC3.setToolTipText("NoC3");
+        
         
     }
     
@@ -59,8 +124,8 @@ public class Roteador extends javax.swing.JPanel {
         north_NoC1_Label = new javax.swing.JLabel();
         east_NoC1_Label = new javax.swing.JLabel();
         east_NoC3_Label = new javax.swing.JLabel();
-        local_NoC1_in = new componentes.UJPanelImagem();
         local_NoC1_out = new componentes.UJPanelImagem();
+        local_NoC1_in = new componentes.UJPanelImagem();
         local_NoC1_Label = new javax.swing.JLabel();
         weast_NoC3_Label = new javax.swing.JLabel();
         routerLabel = new javax.swing.JLabel();
@@ -73,9 +138,11 @@ public class Roteador extends javax.swing.JPanel {
         local_NoC3_in = new componentes.UJPanelImagem();
         local_NoC3_Label = new javax.swing.JLabel();
         local_NoC2_Label = new javax.swing.JLabel();
-        local_Label3 = new javax.swing.JLabel();
-        local_Label4 = new javax.swing.JLabel();
-        local_Label5 = new javax.swing.JLabel();
+        noc3_label = new javax.swing.JLabel();
+        l2_label = new javax.swing.JLabel();
+        noc2_label = new javax.swing.JLabel();
+        noc1_label = new javax.swing.JLabel();
+        l15_label = new javax.swing.JLabel();
         out_north_NoC2 = new componentes.UJPanelImagem();
         in_north_NoC2 = new componentes.UJPanelImagem();
         out_weast_NoC1 = new componentes.UJPanelImagem();
@@ -119,61 +186,45 @@ public class Roteador extends javax.swing.JPanel {
         router.setLayout(null);
 
         north_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        north_NoC2_Label.setText("00%");
+        north_NoC2_Label.setText("00");
         router.add(north_NoC2_Label);
-        north_NoC2_Label.setBounds(67, -2, 25, 20);
+        north_NoC2_Label.setBounds(72, -2, 20, 20);
 
         south_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        south_NoC2_Label.setText("00%");
+        south_NoC2_Label.setText("00");
         router.add(south_NoC2_Label);
-        south_NoC2_Label.setBounds(50, 112, 25, 20);
+        south_NoC2_Label.setBounds(55, 112, 20, 20);
 
         south_NoC1_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        south_NoC1_Label.setText("00%");
+        south_NoC1_Label.setText("00");
         router.add(south_NoC1_Label);
-        south_NoC1_Label.setBounds(6, 112, 25, 20);
+        south_NoC1_Label.setBounds(11, 112, 20, 20);
 
         weast_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        weast_NoC2_Label.setText("00%");
+        weast_NoC2_Label.setText("00");
         router.add(weast_NoC2_Label);
-        weast_NoC2_Label.setBounds(1, 50, 25, 20);
+        weast_NoC2_Label.setBounds(1, 50, 20, 20);
 
         weast_NoC1_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        weast_NoC1_Label.setText("00%");
+        weast_NoC1_Label.setText("00");
         router.add(weast_NoC1_Label);
         weast_NoC1_Label.setBounds(1, 6, 25, 20);
 
         north_NoC1_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        north_NoC1_Label.setText("00%");
+        north_NoC1_Label.setText("00");
         router.add(north_NoC1_Label);
-        north_NoC1_Label.setBounds(24, -2, 25, 20);
+        north_NoC1_Label.setBounds(29, -2, 20, 20);
 
         east_NoC1_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        east_NoC1_Label.setText("00%");
+        east_NoC1_Label.setText("00");
         router.add(east_NoC1_Label);
-        east_NoC1_Label.setBounds(108, 24, 25, 20);
+        east_NoC1_Label.setBounds(116, 24, 12, 20);
 
         east_NoC3_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        east_NoC3_Label.setText("00%");
+        east_NoC3_Label.setText("00");
         east_NoC3_Label.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         router.add(east_NoC3_Label);
-        east_NoC3_Label.setBounds(108, 103, 25, 20);
-
-        local_NoC1_in.setBorder(null);
-
-        javax.swing.GroupLayout local_NoC1_inLayout = new javax.swing.GroupLayout(local_NoC1_in);
-        local_NoC1_in.setLayout(local_NoC1_inLayout);
-        local_NoC1_inLayout.setHorizontalGroup(
-            local_NoC1_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-        local_NoC1_inLayout.setVerticalGroup(
-            local_NoC1_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
-
-        router.add(local_NoC1_in);
-        local_NoC1_in.setBounds(28, 72, 20, 20);
+        east_NoC3_Label.setBounds(116, 113, 12, 10);
 
         local_NoC1_out.setBorder(null);
 
@@ -189,39 +240,57 @@ public class Roteador extends javax.swing.JPanel {
         );
 
         router.add(local_NoC1_out);
-        local_NoC1_out.setBounds(28, 52, 20, 20);
+        local_NoC1_out.setBounds(78, 42, 20, 20);
+
+        local_NoC1_in.setBackground(java.awt.Color.pink);
+        local_NoC1_in.setBorder(null);
+
+        javax.swing.GroupLayout local_NoC1_inLayout = new javax.swing.GroupLayout(local_NoC1_in);
+        local_NoC1_in.setLayout(local_NoC1_inLayout);
+        local_NoC1_inLayout.setHorizontalGroup(
+            local_NoC1_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+        local_NoC1_inLayout.setVerticalGroup(
+            local_NoC1_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        router.add(local_NoC1_in);
+        local_NoC1_in.setBounds(40, 42, 20, 20);
 
         local_NoC1_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        local_NoC1_Label.setText("00%");
+        local_NoC1_Label.setText("00");
         router.add(local_NoC1_Label);
-        local_NoC1_Label.setBounds(28, 92, 25, 13);
+        local_NoC1_Label.setBounds(60, 45, 25, 13);
 
         weast_NoC3_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        weast_NoC3_Label.setText("00%");
+        weast_NoC3_Label.setText("00");
         router.add(weast_NoC3_Label);
         weast_NoC3_Label.setBounds(1, 92, 25, 20);
 
-        routerLabel.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        routerLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        routerLabel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        routerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         routerLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         router.add(routerLabel);
-        routerLabel.setBounds(30, 10, 50, 30);
+        routerLabel.setBounds(50, 10, 40, 20);
 
         north_NoC3_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        north_NoC3_Label.setText("00%");
+        north_NoC3_Label.setText("00");
         router.add(north_NoC3_Label);
-        north_NoC3_Label.setBounds(110, -2, 25, 20);
+        north_NoC3_Label.setBounds(115, -2, 20, 20);
 
         south_NoC3_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        south_NoC3_Label.setText("00%");
+        south_NoC3_Label.setText("00");
         router.add(south_NoC3_Label);
-        south_NoC3_Label.setBounds(88, 112, 25, 20);
+        south_NoC3_Label.setBounds(93, 112, 20, 20);
 
         east_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        east_NoC2_Label.setText("00%");
+        east_NoC2_Label.setText("00");
         router.add(east_NoC2_Label);
-        east_NoC2_Label.setBounds(108, 67, 25, 20);
+        east_NoC2_Label.setBounds(116, 67, 12, 20);
 
+        local_NoC2_out.setBackground(java.awt.Color.pink);
         local_NoC2_out.setBorder(null);
 
         javax.swing.GroupLayout local_NoC2_outLayout = new javax.swing.GroupLayout(local_NoC2_out);
@@ -236,7 +305,7 @@ public class Roteador extends javax.swing.JPanel {
         );
 
         router.add(local_NoC2_out);
-        local_NoC2_out.setBounds(55, 72, 20, 20);
+        local_NoC2_out.setBounds(40, 62, 20, 20);
 
         local_NoC2_in.setBorder(null);
 
@@ -252,7 +321,7 @@ public class Roteador extends javax.swing.JPanel {
         );
 
         router.add(local_NoC2_in);
-        local_NoC2_in.setBounds(55, 52, 20, 20);
+        local_NoC2_in.setBounds(78, 62, 20, 20);
 
         local_NoC3_out.setBorder(null);
 
@@ -268,8 +337,9 @@ public class Roteador extends javax.swing.JPanel {
         );
 
         router.add(local_NoC3_out);
-        local_NoC3_out.setBounds(83, 72, 20, 20);
+        local_NoC3_out.setBounds(78, 82, 20, 20);
 
+        local_NoC3_in.setBackground(java.awt.Color.pink);
         local_NoC3_in.setBorder(null);
 
         javax.swing.GroupLayout local_NoC3_inLayout = new javax.swing.GroupLayout(local_NoC3_in);
@@ -284,32 +354,42 @@ public class Roteador extends javax.swing.JPanel {
         );
 
         router.add(local_NoC3_in);
-        local_NoC3_in.setBounds(83, 52, 20, 20);
+        local_NoC3_in.setBounds(40, 82, 20, 20);
 
         local_NoC3_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        local_NoC3_Label.setText("00%");
+        local_NoC3_Label.setText("00");
         router.add(local_NoC3_Label);
-        local_NoC3_Label.setBounds(83, 92, 25, 13);
+        local_NoC3_Label.setBounds(98, 65, 25, 13);
 
         local_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
-        local_NoC2_Label.setText("00%");
+        local_NoC2_Label.setText("00");
         router.add(local_NoC2_Label);
-        local_NoC2_Label.setBounds(55, 92, 25, 13);
+        local_NoC2_Label.setBounds(60, 85, 25, 13);
 
-        local_Label3.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
-        local_Label3.setText("N3");
-        router.add(local_Label3);
-        local_Label3.setBounds(86, 40, 20, 13);
+        noc3_label.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
+        noc3_label.setText("N3");
+        router.add(noc3_label);
+        noc3_label.setBounds(24, 85, 20, 13);
 
-        local_Label4.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
-        local_Label4.setText("N1");
-        router.add(local_Label4);
-        local_Label4.setBounds(30, 40, 20, 13);
+        l2_label.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
+        l2_label.setText("L2");
+        router.add(l2_label);
+        l2_label.setBounds(80, 30, 20, 10);
 
-        local_Label5.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
-        local_Label5.setText("N2");
-        router.add(local_Label5);
-        local_Label5.setBounds(58, 40, 20, 13);
+        noc2_label.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
+        noc2_label.setText("N2");
+        router.add(noc2_label);
+        noc2_label.setBounds(24, 65, 20, 13);
+
+        noc1_label.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
+        noc1_label.setText("N1");
+        router.add(noc1_label);
+        noc1_label.setBounds(24, 45, 20, 13);
+
+        l15_label.setFont(new java.awt.Font("Andale Mono", 1, 10)); // NOI18N
+        l15_label.setText("L1.5");
+        router.add(l15_label);
+        l15_label.setBounds(37, 30, 30, 13);
 
         add(router);
         router.setBounds(30, 30, 130, 130);
@@ -709,7 +789,7 @@ public class Roteador extends javax.swing.JPanel {
         
         //String text = new DecimalFormat("00.00").format((float)value);
         String text = new DecimalFormat("00").format((float)value);
-        text+="%";
+        //text+="%";
         
         switch (port) {
             case MPSoCConfig.EAST1:
@@ -783,10 +863,10 @@ public class Roteador extends javax.swing.JPanel {
         }
         router.repaint();
             
-        local_NoC1_in.setImagem("/images/local_in.png");
-        local_NoC1_in.repaint();
         local_NoC1_out.setImagem("/images/local_out.png");
         local_NoC1_out.repaint();
+        local_NoC1_in.setImagem("/images/local_in.png");
+        local_NoC1_in.repaint();
         local_NoC2_in.setImagem("/images/local_in.png");
         local_NoC2_in.repaint();
         local_NoC2_out.setImagem("/images/local_out.png");
@@ -797,7 +877,7 @@ public class Roteador extends javax.swing.JPanel {
         local_NoC3_out.repaint();
         
 
-        if (rn.getXCoordinate(router_address) != 0) {//configura esquerda
+        if (rn.getXCoordinate(router_address) != 0) {//reset left
            
             out_weast_NoC1.setImagem("/images/undirected_h.png");
             out_weast_NoC1.repaint();
@@ -813,7 +893,7 @@ public class Roteador extends javax.swing.JPanel {
             in_weast_NoC3.repaint();
         }
         
-        if (rn.getXCoordinate(router_address) != x_dimension - 1) {//configura direita
+        if (rn.getXCoordinate(router_address) != x_dimension - 1) {//reset right
             in_east_NoC2.setImagem("/images/left.png");
             in_east_NoC2.repaint();
             out_east_NoC2.setImagem("/images/undirected_h.png");
@@ -828,7 +908,7 @@ public class Roteador extends javax.swing.JPanel {
             out_east_NoC3.repaint();
         }
         
-        if (rn.getYCoordinate(router_address) != 0) { //configura baixo
+        if (rn.getYCoordinate(router_address) != 0) { //reset down
             
             in_south_NoC1.setImagem("/images/up.png");
             in_south_NoC1.repaint();
@@ -844,7 +924,7 @@ public class Roteador extends javax.swing.JPanel {
             out_south_NoC3.repaint();
         }
         
-        if (rn.getYCoordinate(router_address) != y_dimension - 1) { //configura cima
+        if (rn.getYCoordinate(router_address) != y_dimension - 1) { //reset up
             out_north_NoC2.setImagem("/images/undirected_v.png");
             out_north_NoC2.repaint();
             in_north_NoC2.setImagem("/images/down.png");
@@ -1040,9 +1120,8 @@ public class Roteador extends javax.swing.JPanel {
     private componentes.UJPanelImagem in_weast_NoC1;
     private componentes.UJPanelImagem in_weast_NoC2;
     private componentes.UJPanelImagem in_weast_NoC3;
-    private javax.swing.JLabel local_Label3;
-    private javax.swing.JLabel local_Label4;
-    private javax.swing.JLabel local_Label5;
+    private javax.swing.JLabel l15_label;
+    private javax.swing.JLabel l2_label;
     private javax.swing.JLabel local_NoC1_Label;
     private componentes.UJPanelImagem local_NoC1_in;
     private componentes.UJPanelImagem local_NoC1_out;
@@ -1052,6 +1131,9 @@ public class Roteador extends javax.swing.JPanel {
     private javax.swing.JLabel local_NoC3_Label;
     private componentes.UJPanelImagem local_NoC3_in;
     private componentes.UJPanelImagem local_NoC3_out;
+    private javax.swing.JLabel noc1_label;
+    private javax.swing.JLabel noc2_label;
+    private javax.swing.JLabel noc3_label;
     private javax.swing.JLabel north_NoC1_Label;
     private javax.swing.JLabel north_NoC2_Label;
     private javax.swing.JLabel north_NoC3_Label;
