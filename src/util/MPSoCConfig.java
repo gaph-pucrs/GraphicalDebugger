@@ -38,6 +38,7 @@ public class MPSoCConfig {
     private String debugDirPath = null;
     private int flitSize;
     private int clockPeriodInNs;
+    private float througphputMonWindow;
     private int channel_number;
     
     //This order cannot be changed
@@ -117,6 +118,7 @@ public class MPSoCConfig {
         TASK_TERMINATED_SERVICES = new ArrayList<>();
         this.channel_number = 3;
         this.globalManagerCluster = 0;
+        this.througphputMonWindow = 0.500f;//ms
         try {
             
             RandomAccessFile platformFile = new RandomAccessFile(debugDirPath+"/platform.cfg", "r");
@@ -161,6 +163,9 @@ public class MPSoCConfig {
                         break;
                     case "clock_period_ns":
                         clockPeriodInNs = Integer.parseInt(configInfo[1]);
+                        break;
+                    case "throughput_mon_window_ms":
+                        througphputMonWindow = Float.parseFloat(configInfo[1]);
                         break;
                     case "BEGIN_task_name_relation":
                         initializeTaskNaming(platformFile);
@@ -464,6 +469,14 @@ public class MPSoCConfig {
 
     public int getY_dimension() {
         return mpsoc_y;
+    }
+    
+    public float getThrougphputMonWindow() {
+        return througphputMonWindow;
+    }
+
+    public void setThrougphputMonWindow(float througphputMonWindow) {
+        this.througphputMonWindow = througphputMonWindow;
     }
 
     public void setY_dimension(int y_dimension) {

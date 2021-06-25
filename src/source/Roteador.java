@@ -772,13 +772,13 @@ public class Roteador extends javax.swing.JPanel {
         
         switch(type){
             case MPSoCConfig.SLAVE:
-                //router.setImagem("/images/Router.png");
+                router.setImagem("/images/Router.png");
                 break;
             case MPSoCConfig.CLUSTER_MASTER:
-                //router.setImagem("/images/Router_cluster_master.png");
+                router.setImagem("/images/Router_cluster_master.png");
                 break;
             case MPSoCConfig.GLOBAL_MASTER:
-                //router.setImagem("/images/Router_master.png");
+                router.setImagem("/images/Router_master.png");
                 break;
         }
         router.repaint();

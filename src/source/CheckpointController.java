@@ -16,10 +16,11 @@ public final class CheckpointController {
     private float currentTimeInMs;
     private int clockPeriod;
 
-    public CheckpointController(MainFrame mainFrame, int clockPeriod) {
+    public CheckpointController(MainFrame mainFrame, int clockPeriod, float windowsSizeInMs) {
         this.mainFrame = mainFrame;
         this.clockPeriod = clockPeriod;
-        windowsSizeInMs = 0.500f; //ms
+        //this.windowsSizeInMs = 0.500f; //ms
+        this.windowsSizeInMs = windowsSizeInMs; //ms
         reset();
     }
 
@@ -33,7 +34,7 @@ public final class CheckpointController {
     public void setTime(int timeInTicks) {
 
         this.currentTimeInMs = (float) timeInTicks * clockPeriod / 1000.0f / 1000.0f;
-        
+        //System.out.println(this.currentTimeInMs);
         if ((currentTimeInMs - windowsInit) > windowsSizeInMs) {
             //System.out.println("Checkpoint at: "+windowsInit+" - "+currentTimeInMs+" diff: "+(currentTimeInMs - windowsInit));
             windowsInit = currentTimeInMs;

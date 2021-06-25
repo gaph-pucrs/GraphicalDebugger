@@ -4,6 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/MainFrame.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/RouterInformation.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/CheckpointController.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/ReadTrafficData.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/Roteador.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/util/MPSoCConfig.java</file>

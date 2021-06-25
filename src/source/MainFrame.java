@@ -78,8 +78,9 @@ public final class MainFrame extends javax.swing.JFrame {
         initComponents();
         simulTime.setText("0 ms");
         simulTick.setText("0 ticks");
+        frequencyLabel.setText("0 MHz");
         resetCurrentPacketTable();
-        jSlider1.setValue(98);
+        simSpeedControlBar.setValue(98);
         stopButton.setEnabled(false);
         nextButton.setEnabled(false);
         //deloreamMenuItem.setEnabled(false);
@@ -104,8 +105,9 @@ public final class MainFrame extends javax.swing.JFrame {
             mPSoCInformation = new MPSoCInformation(mpsocConfig);
             run = false;
             simulTime.setText("0 ms");
+            frequencyLabel.setText(mpsocConfig.getFrequencyInMHz()+" MHz");
             simulTick.setText("0 ticks");
-            checkControl = new CheckpointController(this, mpsocConfig.getClockPeriodInNs());
+            checkControl = new CheckpointController(this, mpsocConfig.getClockPeriodInNs(), mpsocConfig.getThrougphputMonWindow());
             unfinishedPackets = 0;
             unfinished_packet_list = new LinkedList<>();
             serviceFilter = new ServiceFilter(mpsocConfig, image_icon);
@@ -155,7 +157,7 @@ public final class MainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         currentPacketTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jSlider1 = new javax.swing.JSlider();
+        simSpeedControlBar = new javax.swing.JSlider();
         simulTime = new javax.swing.JLabel();
         simulTick = new javax.swing.JLabel();
         percentLabel = new javax.swing.JLabel();
@@ -167,6 +169,7 @@ public final class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         goButton = new javax.swing.JButton();
         goTextField = new javax.swing.JTextField();
+        frequencyLabel = new javax.swing.JLabel();
         scrollPanelNoC = new javax.swing.JScrollPane(nocPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -247,18 +250,18 @@ public final class MainFrame extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Speed Control"));
         jPanel2.setLayout(null);
 
-        jSlider1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jSlider1MouseReleased(evt);
-            }
-        });
-        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+        simSpeedControlBar.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSlider1StateChanged(evt);
+                simSpeedControlBarStateChanged(evt);
             }
         });
-        jPanel2.add(jSlider1);
-        jSlider1.setBounds(0, 30, 230, 40);
+        simSpeedControlBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                simSpeedControlBarMouseReleased(evt);
+            }
+        });
+        jPanel2.add(simSpeedControlBar);
+        simSpeedControlBar.setBounds(0, 30, 230, 40);
 
         simulTime.setText("as");
         simulTime.setToolTipText("");
@@ -316,7 +319,7 @@ public final class MainFrame extends javax.swing.JFrame {
 
         jLabel1.setText("Time in Ticks");
         jPanel4.add(jLabel1);
-        jLabel1.setBounds(6, 16, 129, 18);
+        jLabel1.setBounds(6, 16, 129, 17);
 
         goButton.setText("Go");
         goButton.addActionListener(new java.awt.event.ActionListener() {
@@ -328,6 +331,10 @@ public final class MainFrame extends javax.swing.JFrame {
         goButton.setBounds(166, 36, 48, 30);
         jPanel4.add(goTextField);
         goTextField.setBounds(6, 37, 154, 30);
+
+        frequencyLabel.setText("asa");
+        jPanel4.add(frequencyLabel);
+        frequencyLabel.setBounds(140, 10, 80, 20);
 
         panelControl.add(jPanel4);
         jPanel4.setBounds(480, 0, 230, 90);
@@ -550,10 +557,10 @@ public final class MainFrame extends javax.swing.JFrame {
             public void run() {
                 int time;
                 while (run) {
-                    if (jSlider1.getValue() == 0) 
+                    if (simSpeedControlBar.getValue() == 0) 
                         continue;
                     
-                    if (jSlider1.getValue() > 98){
+                    if (simSpeedControlBar.getValue() > 98){
                         time = nextPacket(false, 0);
                         unfinishedPackets = 0;
                         unfinished_packet_list.clear();
@@ -564,10 +571,10 @@ public final class MainFrame extends javax.swing.JFrame {
                         try { /*sleep(1000);*/ } catch (Exception ex) {}
                         continue;
                     }
-                    simulTime.setText(new DecimalFormat("0.00000").format(((float) (time * 10.0f / 1000.0f / 1000.0f))) + " ms");
+                    simulTime.setText(new DecimalFormat("0.00000").format(((float) (time * mpsocConfig.getClockPeriodInNs() / 1000.0f / 1000.0f))) + " ms");
                     simulTick.setText(time + " ticks");
                     try {
-                        sleep(400 - jSlider1.getValue() * 4);
+                        sleep(400 - simSpeedControlBar.getValue() * 4);
                     } catch (Exception ex) {}
                 }
             }
@@ -600,12 +607,12 @@ public final class MainFrame extends javax.swing.JFrame {
         configProcess(platformFilepath);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jSlider1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider1MouseReleased
-    }//GEN-LAST:event_jSlider1MouseReleased
+    private void simSpeedControlBarMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_simSpeedControlBarMouseReleased
+    }//GEN-LAST:event_simSpeedControlBarMouseReleased
 
-    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
-        percentLabel.setText(Integer.toString(jSlider1.getValue()));
-    }//GEN-LAST:event_jSlider1StateChanged
+    private void simSpeedControlBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_simSpeedControlBarStateChanged
+        percentLabel.setText(Integer.toString(simSpeedControlBar.getValue()));
+    }//GEN-LAST:event_simSpeedControlBarStateChanged
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
          if (mpsocConfig == null){
@@ -666,7 +673,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 if (ptime > desiredTime) break;
                 packetCounter--;
             }
-            simulTime.setText(new DecimalFormat("0.00000").format(((float) (ptime * 10.0f / 1000.0f / 1000.0f))) + " ms");
+            simulTime.setText(new DecimalFormat("0.00000").format(((float) (ptime * mpsocConfig.getClockPeriodInNs() / 1000.0f / 1000.0f))) + " ms");
             simulTick.setText(ptime + " ticks");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Enter only numbers and valid times!");
@@ -844,7 +851,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         int time = nextPacket(true, 0);
         if (time != -1){
-            simulTime.setText(new DecimalFormat("0.00000").format(((float) (time * 10.0f / 1000.0f / 1000.0f))) + " ms");
+            simulTime.setText(new DecimalFormat("0.00000").format(((float) (time * mpsocConfig.getClockPeriodInNs() / 1000.0f / 1000.0f))) + " ms");
             simulTick.setText(time + " ticks");
         }
         goButton.setEnabled(true);
@@ -1534,6 +1541,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTable currentPacketTable;
     private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JMenu deloreamMenuItem;
+    private javax.swing.JLabel frequencyLabel;
     private javax.swing.JButton goButton;
     private javax.swing.JTextField goTextField;
     private javax.swing.JLabel jLabel1;
@@ -1554,7 +1562,6 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSlider jSlider1;
     private javax.swing.JMenuItem mainServiceFilter;
     private javax.swing.JMenuItem messageLogMenuItem;
     private javax.swing.JButton nextButton;
@@ -1568,6 +1575,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JScrollPane scrollPanelNoC;
     private javax.swing.JMenuItem serviceListMenuItem;
+    private javax.swing.JSlider simSpeedControlBar;
     private javax.swing.JLabel simulTick;
     private javax.swing.JLabel simulTime;
     private javax.swing.JButton stopButton;
