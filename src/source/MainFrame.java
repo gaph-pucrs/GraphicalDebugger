@@ -1137,7 +1137,6 @@ public final class MainFrame extends javax.swing.JFrame {
                 nocPanel.add(new Roteador(this, ham_addr, mpsocConfig, pe_type), cons);
             }
             cons.gridy++;
-
         }
         
         nocPanel.revalidate();

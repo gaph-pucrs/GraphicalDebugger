@@ -102,6 +102,20 @@ public class Roteador extends javax.swing.JPanel {
         in_north_NoC2.setToolTipText("NoC2");
         in_north_NoC3.setToolTipText("NoC3");
         
+                
+        switch(type){
+            case MPSoCConfig.SLAVE:
+                router.setImagem("/images/Router.png");
+                break;
+            case MPSoCConfig.CLUSTER_MASTER:
+                //router.setImagem("/images/Router_cluster_master.png");
+                break;
+            case MPSoCConfig.GLOBAL_MASTER:
+                //router.setImagem("/images/Router_master.png");
+                router.setImagem("/images/Router.png");
+                break;
+        }
+        router.repaint();
         
     }
     
@@ -849,19 +863,6 @@ public class Roteador extends javax.swing.JPanel {
         RouterNeighbors rn = new RouterNeighbors(x_dimension, y_dimension);
         
         needReset = false;
-        
-        switch(type){
-            case MPSoCConfig.SLAVE:
-                router.setImagem("/images/Router.png");
-                break;
-            case MPSoCConfig.CLUSTER_MASTER:
-                router.setImagem("/images/Router_cluster_master.png");
-                break;
-            case MPSoCConfig.GLOBAL_MASTER:
-                router.setImagem("/images/Router_master.png");
-                break;
-        }
-        router.repaint();
             
         local_NoC1_out.setImagem("/images/local_out.png");
         local_NoC1_out.repaint();
