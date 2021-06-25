@@ -45,6 +45,8 @@ import util.MPSoCConfig;
 public final class MainFrame extends javax.swing.JFrame {
 
     private JPanel nocPanel;
+    private JPanel mainPanel;
+    private JPanel peripheralPanel;
     private MPSoCInformation mPSoCInformation;
     private boolean run;
     private CheckpointController checkControl;
@@ -74,7 +76,10 @@ public final class MainFrame extends javax.swing.JFrame {
         taskMappingFrame = null;
         mpsocConfig = null;
         nocPanel = new JPanel();
-        nocPanel.setBackground(Color.white);
+        nocPanel.setBackground(Color.blue);
+        mainPanel = new JPanel();
+        mainPanel.setBackground(Color.white);
+        peripheralPanel = new JPanel();
         initComponents();
         simulTime.setText("0 ms");
         simulTick.setText("0 ticks");
@@ -170,7 +175,7 @@ public final class MainFrame extends javax.swing.JFrame {
         goButton = new javax.swing.JButton();
         goTextField = new javax.swing.JTextField();
         frequencyLabel = new javax.swing.JLabel();
-        scrollPanelNoC = new javax.swing.JScrollPane(nocPanel,
+        scrollPanelNoC = new javax.swing.JScrollPane(mainPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -1140,6 +1145,37 @@ public final class MainFrame extends javax.swing.JFrame {
         }
         
         nocPanel.revalidate();
+        
+        
+        GridBagLayout gridBagLayoutPeriph = new GridBagLayout();
+        GridBagConstraints consPeriph = new GridBagConstraints();
+        peripheralPanel.setLayout(gridBagLayoutPeriph);
+        
+        consPeriph.gridx = 0;
+        for (int y = mpsocConfig.getY_dimension() - 1; y >= 0; y--) {
+            consPeriph.gridy = y;
+            if (y==mpsocConfig.getY_dimension() - 1)
+                peripheralPanel.add(new ChipsetPeripheral(this, 9, mpsocConfig, 0), consPeriph);
+            else
+                peripheralPanel.add(new DummyPeripheral(), consPeriph);
+            
+        }
+        
+       
+        
+        GridBagLayout gridBagLayoutMain = new GridBagLayout();
+        GridBagConstraints consMain = new GridBagConstraints();
+        mainPanel.removeAll();
+        consMain.gridx = 0;
+        consMain.gridy = 0;
+        mainPanel.setLayout(gridBagLayoutMain);
+        mainPanel.add(peripheralPanel, consMain);
+        consMain.gridx = 1;
+        consMain.gridy = 0;
+        mainPanel.add(nocPanel, consMain);
+        
+        mainPanel.revalidate();
+        
         
     }
     

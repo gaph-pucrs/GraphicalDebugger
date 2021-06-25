@@ -547,7 +547,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JScrollPane(nocPanel,&#xa;    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,&#xa;    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JScrollPane(mainPanel,&#xa;    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,&#xa;    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="scrollPanelNoC.getVerticalScrollBar().setUnitIncrement(10);&#xa;scrollPanelNoC.getHorizontalScrollBar().setUnitIncrement(10);"/>
       </AuxValues>
 

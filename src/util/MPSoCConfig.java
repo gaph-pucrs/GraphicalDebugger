@@ -103,6 +103,10 @@ public class MPSoCConfig {
     public static final int LOCAL_OUT_NOC3  = 29;
     
 
+    public static final int PERIPH_POS_WEST = 0;
+    public static final int PERIPH_POS_EAST = 2;
+    public static final int PERIPH_POS_NORTH = 3;
+    public static final int PERIPH_POS_SOUTH = 4;
 
 
     
