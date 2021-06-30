@@ -55,7 +55,6 @@ public final class MainFrame extends javax.swing.JFrame {
     private FilterForm filter;
     private TaskMappingFrame taskMappingFrame;
     private MPSoCConfig mpsocConfig;
-    private int unfinishedPackets;
     private int routerToPrintLinkUsage;
     private boolean linkUsage;
     private Image image_icon;
@@ -114,7 +113,6 @@ public final class MainFrame extends javax.swing.JFrame {
             frequencyLabel.setText(mpsocConfig.getFrequencyInMHz()+" MHz");
             simulTick.setText("0 ticks");
             checkControl = new CheckpointController(this, mpsocConfig.getClockPeriodInNs(), mpsocConfig.getThrougphputMonWindow());
-            unfinishedPackets = 0;
             unfinished_packet_list = new LinkedList<>();
             serviceFilter = new ServiceFilter(mpsocConfig, image_icon);
             filter = new FilterForm(mpsocConfig, image_icon);
@@ -568,7 +566,6 @@ public final class MainFrame extends javax.swing.JFrame {
                     
                     if (simSpeedControlBar.getValue() > 98){
                         time = nextPacket(false, 0);
-                        unfinishedPackets = 0;
                         unfinished_packet_list.clear();
                     } else
                         time = nextPacket(true, 0);
@@ -674,7 +671,6 @@ public final class MainFrame extends javax.swing.JFrame {
             simulTime.setText("0 ms");
             simulTick.setText("0 ticks");
             checkControl.reset();
-            unfinishedPackets = 0;
             unfinished_packet_list.clear();
             resetAllArrows();
             
@@ -696,7 +692,6 @@ public final class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please, load a debugging before", "Attention", JOptionPane.WARNING_MESSAGE);
             return;
          } 
-        unfinishedPackets = 0;
         unfinished_packet_list.clear();
         resetAllArrows();
         //serviceFilter.setVisible(true);
@@ -873,7 +868,6 @@ public final class MainFrame extends javax.swing.JFrame {
             return;
         } 
         resetAllArrows();
-        unfinishedPackets = 0;
         unfinished_packet_list.clear();
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
@@ -1373,13 +1367,22 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         }.start();
     }
-
+    
+    void init_new_path(int target_router){
+        
+    }
+    
+    void conclude_path(int target_router){
+        
+    }
+    
     public void repaintRouter(Roteador roteador, int port, int target_router) {
 
         int neighbor_label = -1;
         int neighbor_arrow = -1;
         int local_arrow = -1;
         int unfin_index = -1;
+        boolean local_in = false;
 
         switch (port) {
             case MPSoCConfig.NORTH1:
@@ -1406,7 +1409,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 //pintar vizinho de esquerda
                 neighbor_label = mpsocConfig.getVizinho_esquerda(roteador.getRouter_address());
                 break;
-            default:
+            default: 
                 break;
         }
 
@@ -1460,38 +1463,24 @@ public final class MainFrame extends javax.swing.JFrame {
                 neighbor_arrow = MPSoCConfig.NORTH_OUT_NOC3;
                 break;
             case MPSoCConfig.LOCAL1:
-                if (unfinishedPackets <= 0)
-                    resetAllArrows();
-                
                 local_arrow = MPSoCConfig.LOCAL_IN_NOC1;
-                
-                unfin_index = is_router_unfinished_list(roteador.getRouter_address());
-                if (unfin_index == -1)
-                    unfinishedPackets++;
-                
+                local_in = true;
                 break;
             case MPSoCConfig.LOCAL2:
-                if (unfinishedPackets <= 0)
-                    resetAllArrows();
-                unfinished_packet_list.add(roteador.getRouter_address());
                 local_arrow = MPSoCConfig.LOCAL_IN_NOC2;
-                
-                unfin_index = is_router_unfinished_list(roteador.getRouter_address());
-                if (unfin_index == -1)
-                    unfinishedPackets++;
-                
+                local_in = true;
                 break;
             case MPSoCConfig.LOCAL3:
-                if (unfinishedPackets <= 0)
-                    resetAllArrows();
-                unfinished_packet_list.add(roteador.getRouter_address());
                 local_arrow = MPSoCConfig.LOCAL_IN_NOC3;
-                
-                unfin_index = is_router_unfinished_list(roteador.getRouter_address());
-                if (unfin_index == -1)
-                    unfinishedPackets++;
-                
+                local_in = true;
                 break;    
+        }
+        
+        //Control the full path color
+        if (local_in){
+            if (unfinished_packet_list.isEmpty())
+                resetAllArrows();
+            unfinished_packet_list.add(target_router);
         }
 
         
@@ -1505,7 +1494,7 @@ public final class MainFrame extends javax.swing.JFrame {
             //Test if data comes from peripheral
             if (neighbor_arrow != -1){ 
                 
-                unfinished_packet_list.add(roteador.getRouter_address());
+                unfinished_packet_list.add(target_router);
            
                 ChipsetPeripheral chipset_per = getChipsetPeripheralPanel(roteador.getRouter_address());
 
@@ -1516,6 +1505,8 @@ public final class MainFrame extends javax.swing.JFrame {
             
             // Test if data goes to peripheral.
             if (mpsocConfig.getChipset_id() == target_router){ 
+                
+                unfinished_packet_list.remove(new Integer(target_router));
                 
                 //Discover the NoC
                 int noc_padd = ((local_arrow+1) / MPSoCConfig.NOC_ID_MULTIPLIER); //Results: MPSoCConfig.NOC1, MPSoCConfig.NOC2, MPSoCConfig.NOC3
@@ -1576,22 +1567,10 @@ public final class MainFrame extends javax.swing.JFrame {
                     break;
             }
             
-            unfin_index = is_router_unfinished_list(roteador.getRouter_address());
-            if (unfin_index != -1){
-                unfinished_packet_list.remove(unfin_index);
-                unfinishedPackets--;
-            }
+            unfinished_packet_list.remove(new Integer(target_router));
+            
         }
         
-    }
-    
-    private int is_router_unfinished_list(int router_addr){
-        for (int u_index = 0; u_index<unfinished_packet_list.size(); u_index++) {
-            if (unfinished_packet_list.get(u_index) == router_addr){
-                return u_index;
-            }
-        }
-        return -1;
     }
     
     public void resetAllArrows() {
