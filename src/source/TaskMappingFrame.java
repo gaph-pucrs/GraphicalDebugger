@@ -95,8 +95,6 @@ public final class TaskMappingFrame extends javax.swing.JFrame implements Window
 
             taskMapping.removeAll();
 
-            RouterNeighbors n = new RouterNeighbors(mPSoCConfig);
-
             //-----------TASK NAME IMPLEMENTATION -----------------
             TreeMap<Integer, String> taskNameHash = mPSoCConfig.getTaskNameHash();
             if (taskNameHash == null || taskNameHash.isEmpty()) {
@@ -111,7 +109,7 @@ public final class TaskMappingFrame extends javax.swing.JFrame implements Window
 
             for (int y = mPSoCConfig.getY_dimension() - 1; y >= 0; y--) {
                 for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
-                    int ham_addr = n.xy_to_ham_addr((x << 8) | y);
+                    int ham_addr = mPSoCConfig.xy_to_ham_addr((x << 8) | y);
 
                     JPanel panel = new JPanel(new GridBagLayout());
                     panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));

@@ -24,11 +24,9 @@ public final class ReadTrafficData {
     private int packetReadControl;
     private ArrayList<PacketInformation> allPackets;
     private MPSoCConfig mPSoCConfig;
-    private RouterNeighbors n;
 
-    public ReadTrafficData(MPSoCConfig mPSoCConfig, RouterNeighbors n) throws IOException {
+    public ReadTrafficData(MPSoCConfig mPSoCConfig) throws IOException {
         this.mPSoCConfig = mPSoCConfig;
-        this.n = n;
         resetPacketCounter();
         allPackets = new ArrayList<PacketInformation>();
         
@@ -226,7 +224,7 @@ public final class ReadTrafficData {
         }
         
         if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-            return n.xy_to_ham_addr(address);
+            return mPSoCConfig.xy_to_ham_addr(address);
         }
         return address;
     }

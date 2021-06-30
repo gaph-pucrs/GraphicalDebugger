@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import source.RouterNeighbors;
 
 /**
  *
@@ -385,7 +384,7 @@ public class MPSoCConfig {
     }
     
     public int getPEType(int hamAddress){
-        int x = new RouterNeighbors(this).ham_to_xy_addr(hamAddress);
+        int x = ham_to_xy_addr(hamAddress);
         int y;
         x = x & 0xFFFF;//limpar o header
         y = x & 0xFF;//elimina o endereco x
@@ -486,6 +485,78 @@ public class MPSoCConfig {
 
         return ((x << 8) | y);
     }
+    
+    public String XYAdressToXYLabel(int hamAddres){
+        int x = ham_to_xy_addr(hamAddres);
+        int y;
+        x = x & 0xFFFF;//limpar o header
+        y = x & 0xFF;//elimina o endereco x
+        x = x >> 8;//elimina o endereco y
+        
+        return x+""+y;
+    }
+
+
+    public int getVizinho_cima(int router_address) {
+        router_address = ham_to_xy_addr(router_address);
+        
+        int y = router_address & 0xFF;
+        int x = router_address >> 8;
+        
+        y++;
+        
+        if (y < mpsoc_y)
+            return xy_to_ham_addr((x << 8) | y);
+        return -1;
+    }
+
+    public int getVizinho_baixo(int router_address) {
+        router_address = ham_to_xy_addr(router_address);
+        int y = router_address & 0xFF;
+        int x = router_address >> 8;
+        
+        y--;
+        
+        if (y >= 0)
+            return xy_to_ham_addr((x << 8) | y);
+        return -1;
+       
+    }
+
+    public int getVizinho_esquerda(int router_address) {
+        router_address = ham_to_xy_addr(router_address);
+        int y = router_address & 0xFF;
+        int x = router_address >> 8;
+        
+        x--;
+        
+        if (x >= 0)
+            return xy_to_ham_addr((x << 8) | y);
+        return -1;
+        
+    }
+
+    public int getVizinho_direita(int router_address) {
+        router_address = ham_to_xy_addr(router_address);
+        int y = router_address & 0xFF;
+        int x = router_address >> 8;
+        
+        x++;
+        
+        if (x < mpsoc_x)
+            return xy_to_ham_addr((x << 8) | y);
+        return -1;
+        
+    }
+    
+    public int getXCoordinate(int ham_addr){
+        return ham_to_xy_addr(ham_addr) >> 8;
+    }
+    
+    public int getYCoordinate(int ham_addr){
+        return ham_to_xy_addr(ham_addr) & 0xFF;
+    }
+    
     
     public int getX_dimension() {
         return mpsoc_x;

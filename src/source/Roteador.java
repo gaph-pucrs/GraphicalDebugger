@@ -863,8 +863,6 @@ public class Roteador extends javax.swing.JPanel {
         int x_master = mPSoCConfig.getManagerPosition_x();
         int y_master = mPSoCConfig.getManagerPosition_y();
         
-        RouterNeighbors rn = new RouterNeighbors(x_dimension, y_dimension);
-        
         needReset = false;
             
         //L1.5
@@ -884,7 +882,7 @@ public class Roteador extends javax.swing.JPanel {
         local_NoC3_out.repaint();
         
 
-        if (rn.getXCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//reset left
+        if (mPSoCConfig.getXCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//reset left
            
             out_weast_NoC1.setImagem("/images/undirected_h.png");
             out_weast_NoC1.repaint();
@@ -900,7 +898,7 @@ public class Roteador extends javax.swing.JPanel {
             in_weast_NoC3.repaint();
         }
         
-        if (rn.getXCoordinate(router_address) != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
+        if (mPSoCConfig.getXCoordinate(router_address) != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
             in_east_NoC2.setImagem("/images/left.png");
             in_east_NoC2.repaint();
             out_east_NoC2.setImagem("/images/undirected_h.png");
@@ -915,7 +913,7 @@ public class Roteador extends javax.swing.JPanel {
             out_east_NoC3.repaint();
         }
         
-        if (rn.getYCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
+        if (mPSoCConfig.getYCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             
             in_south_NoC1.setImagem("/images/up.png");
             in_south_NoC1.repaint();
@@ -931,7 +929,7 @@ public class Roteador extends javax.swing.JPanel {
             out_south_NoC3.repaint();
         }
         
-        if (rn.getYCoordinate(router_address) != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
+        if (mPSoCConfig.getYCoordinate(router_address) != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             out_north_NoC2.setImagem("/images/undirected_v.png");
             out_north_NoC2.repaint();
             in_north_NoC2.setImagem("/images/down.png");
@@ -948,25 +946,25 @@ public class Roteador extends javax.swing.JPanel {
         
         
         //Reset labels
-        if (rn.getXCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_WEST) {
+        if (mPSoCConfig.getXCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_WEST) {
             weast_NoC1_Label.setText("");
             weast_NoC2_Label.setText("");
             weast_NoC3_Label.setText("");
         }
         
-        if (rn.getXCoordinate(router_address) == x_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_EAST) {
+        if (mPSoCConfig.getXCoordinate(router_address) == x_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_EAST) {
             east_NoC1_Label.setText("");
             east_NoC2_Label.setText("");
             east_NoC3_Label.setText("");
         }
         
-        if (rn.getYCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
+        if (mPSoCConfig.getYCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
             south_NoC1_Label.setText("");
             south_NoC2_Label.setText("");
             south_NoC3_Label.setText("");
         }
         
-        if (rn.getYCoordinate(router_address) == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
+        if (mPSoCConfig.getYCoordinate(router_address) == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
             north_NoC1_Label.setText("");
             north_NoC2_Label.setText("");
             north_NoC3_Label.setText("");

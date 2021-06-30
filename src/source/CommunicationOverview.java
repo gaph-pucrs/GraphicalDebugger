@@ -98,7 +98,6 @@ public final class CommunicationOverview extends javax.swing.JFrame {
         float smaller = -1f, bigger = 0f, averange = 0f;
         int peOfSmaller = 0, peOfBigger = 0;
 
-        RouterNeighbors n = new RouterNeighbors(mPSoCConfig);
         this.routersFlitsVolume = new int[mPSoCConfig.getX_dimension() * mPSoCConfig.getY_dimension()];
         
         hotspot.removeAll();
@@ -107,7 +106,7 @@ public final class CommunicationOverview extends javax.swing.JFrame {
         
         for (int y = mPSoCConfig.getY_dimension() - 1; y >= 0; y--) {
             for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
-                int router_addr = n.xy_to_ham_addr((x << 8) | y);
+                int router_addr = mPSoCConfig.xy_to_ham_addr((x << 8) | y);
                 if (volumeCheckBox.isSelected()){
                     if (services.length == 0)
                         routersFlitsVolume[router_addr] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalVolumeInFlits();
@@ -132,7 +131,7 @@ public final class CommunicationOverview extends javax.swing.JFrame {
         
         for (int y = mPSoCConfig.getY_dimension() - 1; y >= 0; y--) {
             for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
-                int ham_addr = n.xy_to_ham_addr((x << 8) | y);
+                int ham_addr = mPSoCConfig.xy_to_ham_addr((x << 8) | y);
                 
                 JPanel panel = new JPanel(new GridLayout(3, 3));
                 

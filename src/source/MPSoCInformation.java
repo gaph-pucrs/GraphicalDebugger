@@ -18,13 +18,11 @@ public final class MPSoCInformation {
     private ReadTrafficData readTraffic;
     private HashMap<Integer, RouterInformation> PE_Information;
     private MPSoCConfig mPSoCConfig;
-    private RouterNeighbors n;
 
     public MPSoCInformation(MPSoCConfig noCConfig) throws IOException {
         this.mPSoCConfig = noCConfig;
         initalizePEInformation();
-        n = new RouterNeighbors(mPSoCConfig);
-        readTraffic = new ReadTrafficData(this.mPSoCConfig, this.n);
+        readTraffic = new ReadTrafficData(this.mPSoCConfig);
     }
 
     public void initalizePEInformation() {

@@ -712,8 +712,6 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
         int x_dimension = mPSoCConfig.getX_dimension();
         int y_dimension = mPSoCConfig.getY_dimension();
         
-        RouterNeighbors rn = new RouterNeighbors(x_dimension, y_dimension);
-        
         needReset = false;
             
         
