@@ -70,6 +70,7 @@ public class MPSoCConfig {
     public static final int CLUSTER_MASTER  = 1;
     public static final int GLOBAL_MASTER   = 0;
     
+    //****************************************************************************
     public static final int EAST_IN_NOC1    = 0;
     public static final int EAST_OUT_NOC1   = 1;
     public static final int WEAST_IN_NOC1   = 2;
@@ -103,6 +104,8 @@ public class MPSoCConfig {
     public static final int LOCAL_IN_NOC3   = 28;
     public static final int LOCAL_OUT_NOC3  = 29;
     
+    public static final int NOC_ID_MULTIPLIER  = 10; //10 because each NoC (index above) is composed of 10 ports
+    //****************************************************************************
 
     public static final int PERIPH_POS_WEST = 0;
     public static final int PERIPH_POS_EAST = 2;
@@ -484,6 +487,13 @@ public class MPSoCConfig {
         }
 
         return ((x << 8) | y);
+    }
+    
+    public boolean isMasterAddress(int hamRouterAddress){
+        int xyAddress= ham_to_xy_addr(hamRouterAddress);
+        int xyMasterAddress = global_position_x << 8 | global_position_y;
+        
+        return (xyAddress == xyMasterAddress);
     }
     
     public String XYAdressToXYLabel(int hamAddres){

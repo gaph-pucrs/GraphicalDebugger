@@ -1500,28 +1500,63 @@ public final class MainFrame extends javax.swing.JFrame {
             Roteador neigh_router = getRouterPanel(neighbor_label);
             neigh_router.paintArrow(neighbor_arrow);
         
-        } else if (neighbor_arrow != -1){ //Test if data comes from peripheral
-           
-            int manager_position = mpsocConfig.getManagerPosition_x() >> 8 | mpsocConfig.getManagerPosition_y();
-            if (roteador.getRouter_address() == mpsocConfig.xy_to_ham_addr(manager_position)){
-                ChipsetPeripheral chipset_per = getChipsetPeripheralPanel(roteador.getRouter_address());
+        } else if (mpsocConfig.isMasterAddress(roteador.getRouter_address())){
+            
+            //Test if data comes from peripheral
+            if (neighbor_arrow != -1){ 
                 
+                unfinished_packet_list.add(roteador.getRouter_address());
+           
+                ChipsetPeripheral chipset_per = getChipsetPeripheralPanel(roteador.getRouter_address());
+
                 if (chipset_per != null){
                     chipset_per.paintArrow(neighbor_arrow);
                 }
             }
-        } /*else if (mpsocConfig.getChipset_id() == target_router && roteador.get){ // test if data goes to peripheral. This condition will be executed only when the current router is the one attached to peripheral since neighbor_arrow will be == -1
-            switch(mpsocConfig.getChipset_position()){
-                case MPSoCConfig.PERIPH_POS_EAST:
-                    break;
-                case MPSoCConfig.PERIPH_POS_WEST:
-                    break;
-                case MPSoCConfig.PERIPH_POS_NORTH:
-                    break;
-                case MPSoCConfig.PERIPH_POS_SOUTH:
-                    break;
+            
+            // Test if data goes to peripheral.
+            if (mpsocConfig.getChipset_id() == target_router){ 
+                
+                //Discover the NoC
+                int noc_padd = ((local_arrow+1) / MPSoCConfig.NOC_ID_MULTIPLIER); //Results: MPSoCConfig.NOC1, MPSoCConfig.NOC2, MPSoCConfig.NOC3
+                int peripheral_port = -1; //Stores the input port to be painted in the input peripehral
+                int local_output_arrow = -1; //Stores the output port to be painted in the Global router
+                
+                switch(mpsocConfig.getChipset_position()){
+                    case MPSoCConfig.PERIPH_POS_EAST:
+                        local_output_arrow = MPSoCConfig.EAST_OUT_NOC1;
+                        peripheral_port = MPSoCConfig.WEAST_IN_NOC1;
+                        break;
+                    case MPSoCConfig.PERIPH_POS_WEST:
+                        local_output_arrow = MPSoCConfig.WEAST_OUT_NOC1;
+                        peripheral_port = MPSoCConfig.EAST_IN_NOC1;
+                        break;
+                    case MPSoCConfig.PERIPH_POS_NORTH:
+                        local_output_arrow = MPSoCConfig.NORTH_OUT_NOC1;
+                        peripheral_port = MPSoCConfig.SOUTH_IN_NOC1;
+                        break;
+                    case MPSoCConfig.PERIPH_POS_SOUTH:
+                        local_output_arrow = MPSoCConfig.SOUTH_OUT_NOC1;
+                        peripheral_port = MPSoCConfig.NORTH_IN_NOC1;
+                        break;
+                }
+                
+                noc_padd = MPSoCConfig.NOC_ID_MULTIPLIER * noc_padd;
+                local_output_arrow  += noc_padd;
+                peripheral_port     += noc_padd;
+                
+                roteador.paintArrow(local_output_arrow);
+                
+                ChipsetPeripheral chipset_per = getChipsetPeripheralPanel(roteador.getRouter_address());
+
+                if (chipset_per != null){
+                    chipset_per.paintArrow(peripheral_port);
+                }
+                
             }
-        }*/
+        } 
+        
+        
         
         roteador.paintArrow(local_arrow);
         
