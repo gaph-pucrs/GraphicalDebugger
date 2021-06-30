@@ -20,14 +20,14 @@ public class Roteador extends javax.swing.JPanel {
     private int router_address;
     private MPSoCConfig mPSoCConfig;
     private MainFrame mainFrame;
-    private int type;
+    private int peripheralPosition;
     private boolean needReset;
 
-    public Roteador(MainFrame mainFrame, int router_address, MPSoCConfig mPSoCConfig, int type) {
+    public Roteador(MainFrame mainFrame, int router_address, MPSoCConfig mPSoCConfig, int peripheralPosition) {
         this.mainFrame = mainFrame;
         this.router_address = router_address;
         this.mPSoCConfig = mPSoCConfig;
-        this.type = type;
+        this.peripheralPosition = peripheralPosition;
         this.needReset = true;
         initComponents();
         
@@ -102,8 +102,8 @@ public class Roteador extends javax.swing.JPanel {
         in_north_NoC2.setToolTipText("NoC2");
         in_north_NoC3.setToolTipText("NoC3");
         
-                
-        switch(type){
+        router.setImagem("/images/Router.png");
+        /*switch(type){
             case MPSoCConfig.SLAVE:
                 router.setImagem("/images/Router.png");
                 break;
@@ -114,7 +114,7 @@ public class Roteador extends javax.swing.JPanel {
                 //router.setImagem("/images/Router_master.png");
                 router.setImagem("/images/Router.png");
                 break;
-        }
+        }*/
         router.repaint();
         
     }
@@ -860,25 +860,31 @@ public class Roteador extends javax.swing.JPanel {
         int x_dimension = mPSoCConfig.getX_dimension();
         int y_dimension = mPSoCConfig.getY_dimension();
         
+        int x_master = mPSoCConfig.getManagerPosition_x();
+        int y_master = mPSoCConfig.getManagerPosition_y();
+        
         RouterNeighbors rn = new RouterNeighbors(x_dimension, y_dimension);
         
         needReset = false;
             
-        local_NoC1_out.setImagem("/images/local_out.png");
-        local_NoC1_out.repaint();
-        local_NoC1_in.setImagem("/images/local_in.png");
+        //L1.5
+        local_NoC1_in.setImagem("/images/local_in_L15.png");
         local_NoC1_in.repaint();
-        local_NoC2_in.setImagem("/images/local_in.png");
-        local_NoC2_in.repaint();
-        local_NoC2_out.setImagem("/images/local_out.png");
+        local_NoC2_out.setImagem("/images/local_out_L15.png");
         local_NoC2_out.repaint();
-        local_NoC3_in.setImagem("/images/local_in.png");
+        local_NoC3_in.setImagem("/images/local_in_L15.png");
         local_NoC3_in.repaint();
-        local_NoC3_out.setImagem("/images/local_out.png");
+        
+        //L2
+        local_NoC1_out.setImagem("/images/local_out_L2.png");
+        local_NoC1_out.repaint();
+        local_NoC2_in.setImagem("/images/local_in_L2.png");
+        local_NoC2_in.repaint();
+        local_NoC3_out.setImagem("/images/local_out_L2.png");
         local_NoC3_out.repaint();
         
 
-        if (rn.getXCoordinate(router_address) != 0) {//reset left
+        if (rn.getXCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//reset left
            
             out_weast_NoC1.setImagem("/images/undirected_h.png");
             out_weast_NoC1.repaint();
@@ -894,7 +900,7 @@ public class Roteador extends javax.swing.JPanel {
             in_weast_NoC3.repaint();
         }
         
-        if (rn.getXCoordinate(router_address) != x_dimension - 1) {//reset right
+        if (rn.getXCoordinate(router_address) != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
             in_east_NoC2.setImagem("/images/left.png");
             in_east_NoC2.repaint();
             out_east_NoC2.setImagem("/images/undirected_h.png");
@@ -909,7 +915,7 @@ public class Roteador extends javax.swing.JPanel {
             out_east_NoC3.repaint();
         }
         
-        if (rn.getYCoordinate(router_address) != 0) { //reset down
+        if (rn.getYCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             
             in_south_NoC1.setImagem("/images/up.png");
             in_south_NoC1.repaint();
@@ -925,7 +931,7 @@ public class Roteador extends javax.swing.JPanel {
             out_south_NoC3.repaint();
         }
         
-        if (rn.getYCoordinate(router_address) != y_dimension - 1) { //reset up
+        if (rn.getYCoordinate(router_address) != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             out_north_NoC2.setImagem("/images/undirected_v.png");
             out_north_NoC2.repaint();
             in_north_NoC2.setImagem("/images/down.png");
@@ -942,25 +948,25 @@ public class Roteador extends javax.swing.JPanel {
         
         
         //Reset labels
-        if (rn.getXCoordinate(router_address) == 0) {
+        if (rn.getXCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_WEST) {
             weast_NoC1_Label.setText("");
             weast_NoC2_Label.setText("");
             weast_NoC3_Label.setText("");
         }
         
-        if (rn.getXCoordinate(router_address) == x_dimension - 1) {
+        if (rn.getXCoordinate(router_address) == x_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_EAST) {
             east_NoC1_Label.setText("");
             east_NoC2_Label.setText("");
             east_NoC3_Label.setText("");
         }
         
-        if (rn.getYCoordinate(router_address) == 0) {
+        if (rn.getYCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
             south_NoC1_Label.setText("");
             south_NoC2_Label.setText("");
             south_NoC3_Label.setText("");
         }
         
-        if (rn.getYCoordinate(router_address) == y_dimension - 1) {
+        if (rn.getYCoordinate(router_address) == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
             north_NoC1_Label.setText("");
             north_NoC2_Label.setText("");
             north_NoC3_Label.setText("");
@@ -1073,30 +1079,34 @@ public class Roteador extends javax.swing.JPanel {
                 panel = out_south_NoC3;
                 panel.setImagem("/images/red_undirected_v.png");
                 break;
-            case MPSoCConfig.LOCAL_OUT_NOC1:
-                panel = local_NoC1_out;
-                panel.setImagem("/images/red_local_out.png");
+            //L1.5
+            case MPSoCConfig.LOCAL_IN_NOC1:
+                panel = local_NoC1_in;
+                panel.setImagem("/images/red_local_in_L15.png");
                 break;
             case MPSoCConfig.LOCAL_OUT_NOC2:
                 panel = local_NoC2_out;
-                panel.setImagem("/images/red_local_out.png");
-                break;
-            case MPSoCConfig.LOCAL_OUT_NOC3:
-                panel = local_NoC3_out;
-                panel.setImagem("/images/red_local_out.png");
-                break;
-            case MPSoCConfig.LOCAL_IN_NOC1:
-                panel = local_NoC1_in;
-                panel.setImagem("/images/red_local_in.png");
-                break;
-            case MPSoCConfig.LOCAL_IN_NOC2:
-                panel = local_NoC2_in;
-                panel.setImagem("/images/red_local_in.png");
+                panel.setImagem("/images/red_local_out_L15.png");
                 break;
             case MPSoCConfig.LOCAL_IN_NOC3:
                 panel = local_NoC3_in;
-                panel.setImagem("/images/red_local_in.png");
+                panel.setImagem("/images/red_local_in_L15.png");
                 break;
+                
+           //L2
+            case MPSoCConfig.LOCAL_OUT_NOC1:
+                panel = local_NoC1_out;
+                panel.setImagem("/images/red_local_out_L2.png");
+                break;
+            case MPSoCConfig.LOCAL_IN_NOC2:
+                panel = local_NoC2_in;
+                panel.setImagem("/images/red_local_in_L2.png");
+                break;
+            case MPSoCConfig.LOCAL_OUT_NOC3:
+                panel = local_NoC3_out;
+                panel.setImagem("/images/red_local_out_L2.png");
+                break;
+            
             default:
                 needReset = false;
                 break;
@@ -1167,4 +1177,10 @@ public class Roteador extends javax.swing.JPanel {
     public boolean isNeedReset() {
         return needReset;
     }
+
+    public int getPeripheralPosition() {
+        return peripheralPosition;
+    }
+    
+
 }

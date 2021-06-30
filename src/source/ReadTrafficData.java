@@ -215,6 +215,16 @@ public final class ReadTrafficData {
                  */
         
         int address = Integer.parseInt(value);
+        
+        //This IF will limitate the Debugger because it cannot support many-core sizes higher than
+        //mPSoCConfig.getChipset_id(). To support this, change this code and also the way how chipset id
+        //is generated. Today, the hw monitor test if the chipset ID is != 0, if true, it returns the id
+        //instead the target router address.
+        //The implementation inside hw is in: /home/ruaro/openpiton/piton/verif/env/manycore/manycore_network_mon.v.pyv line 123
+        if (address == mPSoCConfig.getChipset_id()){
+            return address;
+        }
+        
         if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
             return n.xy_to_ham_addr(address);
         }

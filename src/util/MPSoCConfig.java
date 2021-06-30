@@ -40,8 +40,10 @@ public class MPSoCConfig {
     private int clockPeriodInNs;
     private float througphputMonWindow;
     private int channel_number;
+    private int chipset_position;
+    private int chipset_id;
     
-    //This order cannot be changed
+    //This order cannot be changed since it is multiple of 5
     public static final int EAST1   = 0;
     public static final int WEST1   = 1;
     public static final int NORTH1  = 2;
@@ -116,7 +118,7 @@ public class MPSoCConfig {
     public static ArrayList<Integer> TASK_ALLOCATION_SERVICES;
     public static ArrayList<Integer> TASK_TERMINATED_SERVICES;
 
-    public MPSoCConfig(String debugDirPath) {
+    public MPSoCConfig(String debugDirPath) throws Exception {
        
         TASK_ALLOCATION_SERVICES = new ArrayList<>();
         TASK_TERMINATED_SERVICES = new ArrayList<>();
@@ -161,6 +163,28 @@ public class MPSoCConfig {
                         break;
                     case "global_manager_cluster":
                         globalManagerCluster = Integer.parseInt(configInfo[1]);
+                        break;
+                    case "chipset_position":
+                        String position = configInfo[1];
+                        switch(position){
+                            case "NORTH":
+                                chipset_position = MPSoCConfig.PERIPH_POS_NORTH;
+                                break;
+                            case "SOUTH":
+                                chipset_position = MPSoCConfig.PERIPH_POS_SOUTH;
+                                break;
+                            case "WEST":
+                                chipset_position = MPSoCConfig.PERIPH_POS_WEST;
+                                break;
+                            case "EAST":
+                                chipset_position = MPSoCConfig.PERIPH_POS_EAST;
+                                break;
+                            default:
+                                throw new Exception("Value stated in chipset_position of platform.cfg is invalid: "+position);
+                        }
+                        break;
+                    case "chipset_id":
+                        chipset_id = Integer.parseInt(configInfo[1]);
                         break;
                     case "flit_size":
                         flitSize = Integer.parseInt(configInfo[1]);
@@ -581,6 +605,14 @@ public class MPSoCConfig {
     
     public int getChannel_number() {
         return channel_number;
+    }
+
+    public int getChipset_position() {
+        return chipset_position;
+    }
+
+    public int getChipset_id() {
+        return chipset_id;
     }
 
 }

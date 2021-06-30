@@ -4,12 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/MainFrame.java</file>
-            <file>file:/home/ruaro/GraphicalDebugger/src/source/RouterInformation.java</file>
-            <file>file:/home/ruaro/GraphicalDebugger/src/source/CheckpointController.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/ReadTrafficData.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/CheckpointController.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/Roteador.java</file>
-            <file>file:/home/ruaro/GraphicalDebugger/src/util/MPSoCConfig.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/ChipsetPeripheral.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/MPSoCInformation.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/util/MPSoCConfig.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/ChipsetPeripheral_OLD.java</file>
         </group>
     </open-files>
 </project-private>

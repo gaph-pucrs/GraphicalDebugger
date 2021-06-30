@@ -6,6 +6,7 @@ package source;
 
 import deloream.DeloreamMainFrame;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -118,7 +119,7 @@ public final class MainFrame extends javax.swing.JFrame {
             serviceFilter = new ServiceFilter(mpsocConfig, image_icon);
             filter = new FilterForm(mpsocConfig, image_icon);
             createNoCPanel();
-            resetRouters();
+            resetAllArrows();
             nextButton.setEnabled(true);
             //deloreamMenuItem.setEnabled(true);
             playButton.setEnabled(true);
@@ -643,7 +644,11 @@ public final class MainFrame extends javax.swing.JFrame {
             return;
         } 
         run = false;
-        mpsocConfig = new MPSoCConfig(mpsocConfig.getDebugDirPath());
+        try {
+            mpsocConfig = new MPSoCConfig(mpsocConfig.getDebugDirPath());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         if (initMPSoC()){
             JOptionPane.showMessageDialog(this, "The project has been successfully loaded!");
         }
@@ -671,7 +676,7 @@ public final class MainFrame extends javax.swing.JFrame {
             checkControl.reset();
             unfinishedPackets = 0;
             unfinished_packet_list.clear();
-            resetRouters();
+            resetAllArrows();
             
             while (packetCounter > 0) {
                 ptime = nextPacket((packetCounter < 50), desiredTime);
@@ -693,7 +698,7 @@ public final class MainFrame extends javax.swing.JFrame {
          } 
         unfinishedPackets = 0;
         unfinished_packet_list.clear();
-        resetRouters();
+        resetAllArrows();
         //serviceFilter.setVisible(true);
         filter.setVisible(true);
          
@@ -867,7 +872,7 @@ public final class MainFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please, load a debugging before", "Attention", JOptionPane.WARNING_MESSAGE);
             return;
         } 
-        resetRouters();
+        resetAllArrows();
         unfinishedPackets = 0;
         unfinished_packet_list.clear();
     }//GEN-LAST:event_jMenuItem6ActionPerformed
@@ -1058,7 +1063,7 @@ public final class MainFrame extends javax.swing.JFrame {
         PacketInformation packet = mPSoCInformation.getNextPacket(filter, limitTime);
 
         if (packet == null){
-            resetRouters();
+            resetAllArrows();
             return -1;
         }
         
@@ -1125,6 +1130,9 @@ public final class MainFrame extends javax.swing.JFrame {
     public void createNoCPanel() {
 
         nocPanel.removeAll();
+        peripheralPanel.removeAll();
+        mainPanel.removeAll();
+        
         GridBagLayout gridBagLayout = new GridBagLayout();
         GridBagConstraints cons = new GridBagConstraints();
         nocPanel.setLayout(gridBagLayout);
@@ -1139,7 +1147,11 @@ public final class MainFrame extends javax.swing.JFrame {
                 cons.gridx++;
                 int ham_addr = n.xy_to_ham_addr((x << 8) | y);
                 pe_type = mpsocConfig.getPEType(ham_addr);
-                nocPanel.add(new Roteador(this, ham_addr, mpsocConfig, pe_type), cons);
+                int peripheralPosition = -1;
+                if (pe_type == MPSoCConfig.GLOBAL_MASTER){
+                    peripheralPosition = mpsocConfig.getChipset_position();
+                }
+                nocPanel.add(new Roteador(this, ham_addr, mpsocConfig, peripheralPosition), cons);
             }
             cons.gridy++;
         }
@@ -1154,10 +1166,12 @@ public final class MainFrame extends javax.swing.JFrame {
         consPeriph.gridx = 0;
         for (int y = mpsocConfig.getY_dimension() - 1; y >= 0; y--) {
             consPeriph.gridy = y;
-            if (y==mpsocConfig.getY_dimension() - 1)
-                peripheralPanel.add(new ChipsetPeripheral(this, 9, mpsocConfig, 0), consPeriph);
-            else
+            if (y==mpsocConfig.getY_dimension() - 1){
+                int peripheral_attached_router = 0; //MAKE THIS DYNAMIC
+                peripheralPanel.add(new ChipsetPeripheral(this, peripheral_attached_router, mpsocConfig, MPSoCConfig.PERIPH_POS_WEST), consPeriph);
+            } else {
                 peripheralPanel.add(new DummyPeripheral(), consPeriph);
+            }
             
         }
         
@@ -1179,7 +1193,23 @@ public final class MainFrame extends javax.swing.JFrame {
         
     }
     
-    
+    public ChipsetPeripheral getChipsetPeripheralPanel(int router_address){
+        ChipsetPeripheral peripheral;
+        //Get all components of this panel
+        Component[] components = peripheralPanel.getComponents();
+        
+        for (Component component : components) {
+            
+            if (component instanceof ChipsetPeripheral){
+                peripheral = (ChipsetPeripheral) component;
+                if (peripheral.getAttachedRouterAddress() == router_address){
+                    return peripheral;
+                }
+            } 
+
+        }
+        return null;
+    }
 
     public Roteador getRouterPanel(int router_address) {
         Roteador router;
@@ -1211,9 +1241,11 @@ public final class MainFrame extends javax.swing.JFrame {
         
         
         float percent = 100.0f / maxThroughput;
+        
+        int peripheralPosition = router.getPeripheralPosition();
 
 
-        if (rn.getXCoordinate(router_address) != 0) {//apagar esquerda
+        if (rn.getXCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//set left
 
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.WEST0) * percent;
@@ -1231,7 +1263,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.WEST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (rn.getXCoordinate(router_address) != x_dimension - 1) {//apagar direita
+        if (rn.getXCoordinate(router_address) != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.EAST0) * percent;
             router.updateThroughput(MPSoCConfig.EAST1, portThroughput);
@@ -1247,7 +1279,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.EAST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (rn.getYCoordinate(router_address) != 0) {//apagar baixo
+        if (rn.getYCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.SOUTH0) * percent;
             router.updateThroughput(MPSoCConfig.SOUTH1, portThroughput);
@@ -1263,7 +1295,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.SOUTH3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (rn.getYCoordinate(router_address) != y_dimension - 1) {
+        if (rn.getYCoordinate(router_address) != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.NORTH0) * percent;
             router.updateThroughput(MPSoCConfig.NORTH1, portThroughput);
@@ -1435,7 +1467,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 break;
             case MPSoCConfig.LOCAL1:
                 if (unfinishedPackets <= 0)
-                    resetRouters();
+                    resetAllArrows();
                 
                 local_arrow = MPSoCConfig.LOCAL_IN_NOC1;
                 
@@ -1446,7 +1478,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 break;
             case MPSoCConfig.LOCAL2:
                 if (unfinishedPackets <= 0)
-                    resetRouters();
+                    resetAllArrows();
                 unfinished_packet_list.add(roteador.getRouter_address());
                 local_arrow = MPSoCConfig.LOCAL_IN_NOC2;
                 
@@ -1457,7 +1489,7 @@ public final class MainFrame extends javax.swing.JFrame {
                 break;
             case MPSoCConfig.LOCAL3:
                 if (unfinishedPackets <= 0)
-                    resetRouters();
+                    resetAllArrows();
                 unfinished_packet_list.add(roteador.getRouter_address());
                 local_arrow = MPSoCConfig.LOCAL_IN_NOC3;
                 
@@ -1473,7 +1505,29 @@ public final class MainFrame extends javax.swing.JFrame {
         if (neighbor_label != -1) {
             Roteador neigh_router = getRouterPanel(neighbor_label);
             neigh_router.paintArrow(neighbor_arrow);
-        }
+        
+        } else if (neighbor_arrow != -1){ //Test if data comes from peripheral
+           
+            int manager_position = mpsocConfig.getManagerPosition_x() >> 8 | mpsocConfig.getManagerPosition_y();
+            if (roteador.getRouter_address() == neighbor.xy_to_ham_addr(manager_position)){
+                ChipsetPeripheral chipset_per = getChipsetPeripheralPanel(roteador.getRouter_address());
+                
+                if (chipset_per != null){
+                    chipset_per.paintArrow(neighbor_arrow);
+                }
+            }
+        } /*else if (mpsocConfig.getChipset_id() == target_router && roteador.get){ // test if data goes to peripheral. This condition will be executed only when the current router is the one attached to peripheral since neighbor_arrow will be == -1
+            switch(mpsocConfig.getChipset_position()){
+                case MPSoCConfig.PERIPH_POS_EAST:
+                    break;
+                case MPSoCConfig.PERIPH_POS_WEST:
+                    break;
+                case MPSoCConfig.PERIPH_POS_NORTH:
+                    break;
+                case MPSoCConfig.PERIPH_POS_SOUTH:
+                    break;
+            }
+        }*/
         
         roteador.paintArrow(local_arrow);
         
@@ -1510,8 +1564,10 @@ public final class MainFrame extends javax.swing.JFrame {
         }
         return -1;
     }
-
-    public void resetRouters() {
+    
+    public void resetAllArrows() {
+        
+        //Reset Routers arrows
         Roteador router;
 
         for (int i = 0; i < mpsocConfig.getPENumber(); i++) {
@@ -1520,6 +1576,22 @@ public final class MainFrame extends javax.swing.JFrame {
             
             if (router.isNeedReset())//Melhora o desempenho
                 router.resetArrows();
+        }
+        
+        //---------------------------------------------------------
+        
+        //Reset Perhipehral arrows
+        ChipsetPeripheral peripheral;
+        //Get all components of this panel
+        Component[] components = peripheralPanel.getComponents();
+        
+        for (Component component : components) {
+            
+            if (component instanceof ChipsetPeripheral){
+                peripheral = (ChipsetPeripheral) component;
+                peripheral.resetArrows();
+            } 
+
         }
     }
 

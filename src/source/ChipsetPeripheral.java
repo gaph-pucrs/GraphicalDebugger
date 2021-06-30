@@ -934,11 +934,15 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
     private javax.swing.JLabel weast_NoC3_Label;
     // End of variables declaration//GEN-END:variables
 
-    public int getRouter_address() {
+    public int getAttachedRouterAddress() {
         return attached_router_addr;
     }
 
     public boolean isNeedReset() {
         return needReset;
+    }
+
+    public int getPeripheral_position() {
+        return peripheral_position;
     }
 }
