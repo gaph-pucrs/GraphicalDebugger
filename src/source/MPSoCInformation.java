@@ -6,7 +6,6 @@ package source;
 
 import java.io.IOException;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
 import util.MPSoCConfig;
 
 /**
@@ -31,6 +30,10 @@ public final class MPSoCInformation {
         for (int i = 0; i < this.mPSoCConfig.getPENumber(); i++) {
             PE_Information.put(i, new RouterInformation(mPSoCConfig, i));
         }
+        
+        //Adds the Chipset information
+        //PE_Information.put(mPSoCConfig.getChipset_id(), new RouterInformation(mPSoCConfig, mPSoCConfig.getChipset_id()));
+        
     }
 
     public int getPacketCounterByTime(int time) { //retorna o numero de pacotes ate chegar no tempo desejado

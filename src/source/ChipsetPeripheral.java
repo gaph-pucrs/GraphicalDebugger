@@ -67,6 +67,7 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
         in_north_NoC3.setToolTipText("NoC3");
         
         
+        //break; is commented because currently I am not showing bdw utilizaiton in peripheral
         switch(peripheral_position){
             case MPSoCConfig.PERIPH_POS_EAST:
             case MPSoCConfig.PERIPH_POS_WEST: 
@@ -76,7 +77,7 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
                 north_NoC1_Label.setText("");
                 north_NoC2_Label.setText("");
                 north_NoC3_Label.setText("");
-                break;
+                //break;
             case MPSoCConfig.PERIPH_POS_SOUTH:
             case MPSoCConfig.PERIPH_POS_NORTH: 
                 weast_NoC1_Label.setText("");
@@ -88,7 +89,8 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
                 break;
         }
         
-        switch(peripheral_position){
+        //commented because currently I am not showing bdw utilizaiton in peripheral
+        /*switch(peripheral_position){
             case MPSoCConfig.PERIPH_POS_EAST:
                 east_NoC1_Label.setText("");
                 east_NoC2_Label.setText("");
@@ -109,7 +111,7 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
                 north_NoC2_Label.setText("");
                 north_NoC3_Label.setText("");
                 break;
-        }
+        }*/
         
         router.setImagem("/images/Router_master.png");
         
