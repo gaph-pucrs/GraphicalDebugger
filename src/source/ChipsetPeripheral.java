@@ -4,7 +4,9 @@ import componentes.UJPanelImagem;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.text.DecimalFormat;
+import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import util.MPSoCConfig;
 
 /*
@@ -716,6 +718,9 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
         
         needReset = false;
             
+        //Set border black
+        //periphNamePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
         
         switch(peripheral_position){
             case MPSoCConfig.PERIPH_POS_EAST:
@@ -785,6 +790,9 @@ public class ChipsetPeripheral extends javax.swing.JPanel {
         UJPanelImagem panel = null;
 
         needReset = true;
+        
+        //Set border red
+        //periphNamePanel.setBorder(BorderFactory.createLineBorder(Color.red));
         
         switch (arrow) {
             case MPSoCConfig.EAST_IN_NOC1:
