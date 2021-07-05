@@ -68,7 +68,8 @@ public final class MainFrame extends javax.swing.JFrame {
     
     public MainFrame(String args[]) {
         this.setLocation(100, 20);
-        URL url = this.getClass().getResource("/icon/gaph_logo.png");   
+        //URL url = this.getClass().getResource("/icon/gaph_logo.png");
+        URL url = this.getClass().getResource("/icon/openpiton.png");   
         this.image_icon = Toolkit.getDefaultToolkit().getImage(url);
         this.setIconImage(image_icon);
         this.setTitle("MPSoC Debugger [OpenPiton-v1.0]");
