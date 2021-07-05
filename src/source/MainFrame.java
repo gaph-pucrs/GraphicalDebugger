@@ -971,12 +971,12 @@ public final class MainFrame extends javax.swing.JFrame {
         infoFormat += "Field description:\n";
         infoFormat += "*Time*: Integer decimal value, represent the current tick counter that the header entered by the input port of the router\n";
         infoFormat += "*Current Router Address*: An Integer decimal value with the less significative 8 bits (0xFF), representing the Y address, and the bits 8-15 (0xFF00) representing the X address\n";
-        infoFormat += "*Service*: Integer Hexadecimal value containing the packet service\n";
+        infoFormat += "*Service*: Integer decimal value containing the packet service\n";
+        infoFormat += "*Payload size*: Integer decimal value with the amount of flits coming after header\n";
         infoFormat += "*Packet bandwidth*: Integer decimal value with the amount of time in clock cicles from the moment that the header enter by the router until the last flit of the packet exits the router\n";
-        infoFormat += "*Input port*: Integer decimal value represent the input port where the packet entered into the router (0-EAST, 1-WEST, 2-NORTH, 3-SOUTH, 4-LOCAL)\n";
+        infoFormat += "*NoC*: Integer decimal value representing the NoC number (1,2,3)\n";
+        infoFormat += "*Input port*: Character value (N,S,W,E) representing the input port where the packet entered into the router (0-EAST, 1-WEST, 2-NORTH, 3-SOUTH, 4-LOCAL)\n";
         infoFormat += "*Target Router*: Same format than Current Router address. Has the address of the header, threfore, the target router of the packet\n";
-        infoFormat += "*Source task*: OPTIONAL field, is a Integer decimal value with the ID of the producer task of a TASK_ALLOCATION, TASK_TERMINATED, MESSAGE_REQUEST, MESSAGE_DELIVERY packet\n";
-        infoFormat += "*Target task*: OPTIONAL field, same format than Source task, contains the address of the consumer task for the same packet services.\n";
         infoFormat += "\n\nAuthor: Marcelo Ruaro, more info please contact: mceloruaro@gmail.com\n";
         
         JOptionPane.showMessageDialog(this, infoFormat, "", JOptionPane.INFORMATION_MESSAGE);
@@ -1100,8 +1100,19 @@ public final class MainFrame extends javax.swing.JFrame {
         String target = null;
         String source = null;
         
-        source = mpsocConfig.XYAdressToXYLabel(packetInfo.getRouter_address());
-        target = mpsocConfig.XYAdressToXYLabel(packetInfo.getTarget_router());
+        
+        
+        if (packetInfo.getTarget_router() == mpsocConfig.getChipset_id()){
+            target = "Chipset";
+        } else { 
+            target = mpsocConfig.XYAdressToXYLabel(packetInfo.getTarget_router());
+        }
+        
+        if (packetInfo.getRouter_address() == mpsocConfig.getChipset_id()){
+            source = "Chipset";
+        } else {
+            source = mpsocConfig.XYAdressToXYLabel(packetInfo.getRouter_address());
+        }
         
         String service = mpsocConfig.getStringServiceName(packetInfo.getService());
         
@@ -1384,7 +1395,6 @@ public final class MainFrame extends javax.swing.JFrame {
         int neighbor_label = -1;
         int neighbor_arrow = -1;
         int local_arrow = -1;
-        int unfin_index = -1;
         boolean local_in = false;
 
         switch (port) {
@@ -1480,9 +1490,11 @@ public final class MainFrame extends javax.swing.JFrame {
         }
         
         //Control the full path color
+        
+        if (unfinished_packet_list.isEmpty()){
+            resetAllArrows();
+        }
         if (local_in){
-            if (unfinished_packet_list.isEmpty())
-                resetAllArrows();
             unfinished_packet_list.add(target_router);
         }
 
