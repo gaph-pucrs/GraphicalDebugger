@@ -27,8 +27,11 @@ public final class MPSoCInformation {
     public void initalizePEInformation() {
         PE_Information = new HashMap<Integer, RouterInformation>();
 
-        for (int i = 0; i < this.mPSoCConfig.getPENumber(); i++) {
-            PE_Information.put(i, new RouterInformation(mPSoCConfig, i));
+        for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
+            for (int y = 0; y < mPSoCConfig.getY_dimension(); y++) {
+                int xyAddr = x << 8 | y;
+                PE_Information.put(xyAddr, new RouterInformation(mPSoCConfig, xyAddr));
+            }
         }
         
         //Adds the Chipset information

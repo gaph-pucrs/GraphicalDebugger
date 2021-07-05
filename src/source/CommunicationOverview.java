@@ -76,13 +76,8 @@ public final class CommunicationOverview extends javax.swing.JFrame {
         //String smallerColunm = "Router "+routerOfSmaller +" ="+ new DecimalFormat("0.000%").format(smaller);
         String smallerRouter, biggerRouter;
         
-        if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-           smallerRouter = mPSoCConfig.HamAdressToXYLabel(routerOfSmaller);
-           biggerRouter = mPSoCConfig.HamAdressToXYLabel(routerOfBigger);
-        } else {
-            smallerRouter = Integer.toString(routerOfSmaller);
-            biggerRouter = Integer.toString(routerOfBigger);
-        }
+        smallerRouter = mPSoCConfig.XYAdressToXYLabel(routerOfSmaller);
+        biggerRouter = mPSoCConfig.XYAdressToXYLabel(routerOfBigger);
         
         String smallerColunm = "R. "+smallerRouter+": "+new DecimalFormat("0.000").format(smaller)+"%";
         String biggerColunm = "R. "+biggerRouter+": "+new DecimalFormat("0.000").format(bigger)+"%";
@@ -106,19 +101,20 @@ public final class CommunicationOverview extends javax.swing.JFrame {
         
         for (int y = mPSoCConfig.getY_dimension() - 1; y >= 0; y--) {
             for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
-                int router_addr = mPSoCConfig.xy_to_ham_addr((x << 8) | y);
+                int router_addr = ((x << 8) | y);
+                int router_index = mPSoCConfig.xy_to_index(router_addr);
                 if (volumeCheckBox.isSelected()){
                     if (services.length == 0)
-                        routersFlitsVolume[router_addr] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalVolumeInFlits();
+                        routersFlitsVolume[router_index] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalVolumeInFlits();
                     else 
-                        routersFlitsVolume[router_addr] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalServicesVolumeInFlits(services);
+                        routersFlitsVolume[router_index] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalServicesVolumeInFlits(services);
                 } else {
                     if (services.length == 0)
-                        routersFlitsVolume[router_addr] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalBandwidthInCycles();
+                        routersFlitsVolume[router_index] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalBandwidthInCycles();
                     else 
-                        routersFlitsVolume[router_addr] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalServicesBandwidthInCycles(services);
+                        routersFlitsVolume[router_index] = mPSoCInformation.getRouterInformation(router_addr).getRouterTotalServicesBandwidthInCycles(services);
                 }
-                totalVolume += routersFlitsVolume[router_addr];
+                totalVolume += routersFlitsVolume[router_index];
             }
         }
         
@@ -131,7 +127,8 @@ public final class CommunicationOverview extends javax.swing.JFrame {
         
         for (int y = mPSoCConfig.getY_dimension() - 1; y >= 0; y--) {
             for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
-                int ham_addr = mPSoCConfig.xy_to_ham_addr((x << 8) | y);
+                int xy_addr = ((x << 8) | y);
+                int index_addr = mPSoCConfig.xy_to_index(xy_addr);
                 
                 JPanel panel = new JPanel(new GridLayout(3, 3));
                 
@@ -139,14 +136,14 @@ public final class CommunicationOverview extends javax.swing.JFrame {
                 
                 if (underRouterRadioButton.isSelected()){
                     if (volumeCheckBox.isSelected())
-                        totalVolume = mPSoCInformation.getRouterInformation(ham_addr).getRouterTotalVolumeInFlits();
+                        totalVolume = mPSoCInformation.getRouterInformation(xy_addr).getRouterTotalVolumeInFlits();
                     else
-                        totalVolume = mPSoCInformation.getRouterInformation(ham_addr).getRouterTotalBandwidthInCycles();
+                        totalVolume = mPSoCInformation.getRouterInformation(xy_addr).getRouterTotalBandwidthInCycles();
                 }              
                 
                 String volume = "0%";
                 if (totalVolume != 0){
-                    percent = routersFlitsVolume[ham_addr]*100.0f/totalVolume;
+                    percent = routersFlitsVolume[index_addr]*100.0f/totalVolume;
                     volume = new DecimalFormat("0.000").format(percent);
                    /* if (volumeCheckBox.isSelected())
                         volume +="% filts";
@@ -166,11 +163,11 @@ public final class CommunicationOverview extends javax.swing.JFrame {
                 
                 if (bigger < percent){
                     bigger = percent;
-                    peOfBigger = ham_addr;
+                    peOfBigger = xy_addr;
                 }
                 if (smaller > percent){
                     smaller = percent;
-                    peOfSmaller = ham_addr;
+                    peOfSmaller = xy_addr;
                 }
                 averange+=percent;
                 
@@ -183,7 +180,7 @@ public final class CommunicationOverview extends javax.swing.JFrame {
                 /*if (c < (256/2))
                     foreground = Color.BLACK;*/
                 String router_name = null;
-                int peType = mPSoCConfig.getPEType(ham_addr);
+                int peType = mPSoCConfig.getPEType(x, y);
                 switch(peType){
                     case MPSoCConfig.GLOBAL_MASTER:
                         router_name = "Global M ";
@@ -197,10 +194,8 @@ public final class CommunicationOverview extends javax.swing.JFrame {
                 }
                         
                 JLabel labelRouter = null;
-                if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.HAMILTONIAN)
-                    labelRouter = new JLabel(router_name+ham_addr);
-                else
-                    labelRouter = new JLabel(router_name+this.mPSoCConfig.HamAdressToXYLabel(ham_addr));
+                
+                labelRouter = new JLabel(router_name+this.mPSoCConfig.XYAdressToXYLabel(xy_addr));
                 
                 labelRouter.setFont(new Font("Verdana",1,18));
                 labelRouter.setForeground(foreground);

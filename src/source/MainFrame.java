@@ -1036,11 +1036,14 @@ public final class MainFrame extends javax.swing.JFrame {
              
                 float maxThroughputPerWindow = checkControl.getWindowsSizeInNs() / mpsocConfig.getClockPeriodInNs();
 
-                for (int i = 0; i < mpsocConfig.getPENumber(); i++) {
-                    RouterInformation routerInfo = mPSoCInformation.getRouterInformation(i);
-                    updateRouterThroughput(i, routerInfo, maxThroughputPerWindow);
+                for (int x = 0; x < mpsocConfig.getX_dimension(); x++) {
+                    for (int y = 0; y < mpsocConfig.getY_dimension(); y++) {
+                        int xyAddr = x << 8 | y;
+                        RouterInformation routerInfo = mPSoCInformation.getRouterInformation(xyAddr);
+                        updateRouterThroughput(xyAddr, routerInfo, maxThroughputPerWindow);
+                    }
                 }
-
+                    
 /*
             }
         }.start();*/
@@ -1071,9 +1074,8 @@ public final class MainFrame extends javax.swing.JFrame {
             
                         
             String router_address = Integer.toString(packet.getRouter_address());
-            if (mpsocConfig.getRouterAddressing() == MPSoCConfig.XY){
-                router_address = mpsocConfig.HamAdressToXYLabel(packet.getRouter_address());
-            }
+            
+            router_address = mpsocConfig.XYAdressToXYLabel(packet.getRouter_address());
             
             JOptionPane.showMessageDialog(this, "ERROR: Service <" + packet.getService() + "> packet unidentified. \n"
                     + "Time: " + packet.getTime() + " "    
@@ -1098,13 +1100,9 @@ public final class MainFrame extends javax.swing.JFrame {
         String target = null;
         String source = null;
         
-        if (mpsocConfig.getRouterAddressing() == MPSoCConfig.HAMILTONIAN){
-            source = Integer.toString(packetInfo.getRouter_address());
-            target = Integer.toString(packetInfo.getTarget_router());
-        } else {
-            source = mpsocConfig.HamAdressToXYLabel(packetInfo.getRouter_address());
-            target = mpsocConfig.HamAdressToXYLabel(packetInfo.getTarget_router());
-        }
+        source = mpsocConfig.XYAdressToXYLabel(packetInfo.getRouter_address());
+        target = mpsocConfig.XYAdressToXYLabel(packetInfo.getTarget_router());
+        
         String service = mpsocConfig.getStringServiceName(packetInfo.getService());
         
         String size = packetInfo.getSize() + " | "+packetInfo.getBandwidthCycles();
@@ -1139,13 +1137,13 @@ public final class MainFrame extends javax.swing.JFrame {
             cons.gridx = 0;
             for (int x = 0; x < mpsocConfig.getX_dimension(); x++) {
                 cons.gridx++;
-                int ham_addr = mpsocConfig.xy_to_ham_addr((x << 8) | y);
-                pe_type = mpsocConfig.getPEType(ham_addr);
+                pe_type = mpsocConfig.getPEType(x, y);
+                int router_addr = (x << 8 | y);
                 int peripheralPosition = -1;
                 if (pe_type == MPSoCConfig.GLOBAL_MASTER){
                     peripheralPosition = mpsocConfig.getChipset_position();
                 }
-                nocPanel.add(new Roteador(this, ham_addr, mpsocConfig, peripheralPosition), cons);
+                nocPanel.add(new Roteador(this, router_addr, mpsocConfig, peripheralPosition), cons);
             }
             cons.gridy++;
         }
@@ -1226,6 +1224,9 @@ public final class MainFrame extends javax.swing.JFrame {
 
         int x_dimension = mpsocConfig.getX_dimension();
         int y_dimension = mpsocConfig.getY_dimension();
+        
+        int x = router_address >> 8;
+        int y = router_address & 0xFF;
 
         
         float portThroughput = 0;
@@ -1238,7 +1239,7 @@ public final class MainFrame extends javax.swing.JFrame {
         int peripheralPosition = router.getPeripheralPosition();
 
 
-        if (mpsocConfig.getXCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//set left
+        if (x != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//set left
 
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.WEST1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.WEST0) * percent;
@@ -1256,7 +1257,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.WEST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (mpsocConfig.getXCoordinate(router_address) != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
+        if (x != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.EAST1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.EAST0) * percent;
             router.updateThroughput(MPSoCConfig.EAST1, portThroughput);
@@ -1272,7 +1273,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.EAST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (mpsocConfig.getYCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
+        if (y != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.SOUTH0) * percent;
             router.updateThroughput(MPSoCConfig.SOUTH1, portThroughput);
@@ -1288,7 +1289,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.SOUTH3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (mpsocConfig.getYCoordinate(router_address) != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
+        if (y != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.NORTH0) * percent;
             router.updateThroughput(MPSoCConfig.NORTH1, portThroughput);

@@ -361,9 +361,7 @@ public class FilterForm extends javax.swing.JFrame {
     }
     
     private void addItemInPEList(String PE) {
-        if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-            PE = mPSoCConfig.HamAdressToXYLabel(Integer.parseInt(PE));
-        }
+        PE = mPSoCConfig.XYAdressToXYLabel(Integer.parseInt(PE));
         
         DefaultListModel model = (DefaultListModel) addedPEList.getModel();
         model.addElement(PE);
@@ -385,11 +383,7 @@ public class FilterForm extends javax.swing.JFrame {
             
             String  address;
             
-            if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-                address = mPSoCConfig.HamAdressToXYLabel(i);
-            } else {
-                address = Integer.toString(i);
-            }
+            address = mPSoCConfig.IndexAddressToXYLabel(i);
             
             toAddPEComboBox.addItem(address);
            
@@ -421,9 +415,7 @@ public class FilterForm extends javax.swing.JFrame {
     private void removePEButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePEButtonActionPerformed
         if (!addedPEList.isSelectionEmpty()) {
             String PE = addedPEList.getSelectedValue().toString();
-            if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-                PE = Integer.toString(mPSoCConfig.XYLabelToHamAddress(PE));
-            }
+            PE = Integer.toString(mPSoCConfig.XYLabelToIndexAddress(PE));
             Integer index = addedPEList.getSelectedIndex();
             DefaultListModel model = (DefaultListModel) addedPEList.getModel();
             model.remove(index);
@@ -445,11 +437,7 @@ public class FilterForm extends javax.swing.JFrame {
        int selectedPE = 0;
        String label = toAddPEComboBox.getSelectedItem().toString();
        
-       if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-           selectedPE = mPSoCConfig.XYLabelToHamAddress(label);
-       } else {
-           selectedPE = Integer.parseInt(label);
-       }
+        selectedPE = mPSoCConfig.XYLabelToIndexAddress(label);
 
         if (!addedPE.contains(selectedPE)) {
             addedPE.add(selectedPE);

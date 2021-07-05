@@ -134,12 +134,8 @@ public final class SchedulingPanel extends JPanel implements KeyListener, MouseL
             
             if (appIDFilter == -1){
                 g.setFont(new Font("Arial", Font.BOLD, 16)); 
-                if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-                    int pe_addr = Integer.parseInt(PE_address);
-                    g.drawString("PE "+(pe_addr >> 8)+"x"+(pe_addr & 0xFF)+" Scheduling Graph", width/2-50, 20);
-                } else {
-                    g.drawString("PE "+PE_address+" Scheduling Graph", width/2-50, 20);
-                }
+                int pe_addr = Integer.parseInt(PE_address);
+                g.drawString("PE "+(pe_addr >> 8)+"x"+(pe_addr & 0xFF)+" Scheduling Graph", width/2-50, 20);
             }
             
             g.setFont(new Font("Arial", Font.PLAIN, 12)); 
@@ -372,11 +368,8 @@ public final class SchedulingPanel extends JPanel implements KeyListener, MouseL
                      peNumber++;
                      
                      proc = (x << 8) | y;
-                     if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.HAMILTONIAN){
-                        procStr = Integer.toString(mPSoCConfig.xy_to_ham_addr(proc));
-                     } else {
-                        procStr = Integer.toString(proc);
-                     }
+                    procStr = Integer.toString(proc);
+                    
                      start_time = -1;
                      while ((line = rf.readLine()) != null) {
 

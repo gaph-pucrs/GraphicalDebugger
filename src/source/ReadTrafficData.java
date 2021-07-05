@@ -223,10 +223,7 @@ public final class ReadTrafficData {
             return address;
         }
         
-        if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-            return mPSoCConfig.xy_to_ham_addr(address);
-        }
-        return address;
+        return Integer.parseInt(value);
     }
 
     public ArrayList<PacketInformation> getAllPackets() {

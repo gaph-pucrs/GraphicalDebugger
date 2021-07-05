@@ -109,7 +109,7 @@ public final class TaskMappingFrame extends javax.swing.JFrame implements Window
 
             for (int y = mPSoCConfig.getY_dimension() - 1; y >= 0; y--) {
                 for (int x = 0; x < mPSoCConfig.getX_dimension(); x++) {
-                    int ham_addr = mPSoCConfig.xy_to_ham_addr((x << 8) | y);
+                    int xy_addr = ((x << 8) | y);
 
                     JPanel panel = new JPanel(new GridBagLayout());
                     panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -139,11 +139,7 @@ public final class TaskMappingFrame extends javax.swing.JFrame implements Window
                     }*/
 
                     JLabel labelRouter = null;
-                    if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.HAMILTONIAN) {
-                        labelRouter = new JLabel(peName + ham_addr);
-                    } else {
-                        labelRouter = new JLabel(peName + this.mPSoCConfig.HamAdressToXYLabel(ham_addr));
-                    }
+                    labelRouter = new JLabel(peName + this.mPSoCConfig.XYAdressToXYLabel(xy_addr));
 
                     labelRouter.setFont(new Font("Verdana", 1, 12));
                     labelRouter.setForeground(foreground);
@@ -151,7 +147,7 @@ public final class TaskMappingFrame extends javax.swing.JFrame implements Window
                     labelRouter.setVerticalAlignment(SwingConstants.CENTER);
                     labelRouter.setVerticalTextPosition(SwingConstants.TOP);
 
-                    ArrayList<TaskInformation> taskInformationList = mPSoCInformation.getRouterInformation(ham_addr).getTasksInformation();
+                    ArrayList<TaskInformation> taskInformationList = mPSoCInformation.getRouterInformation(xy_addr).getTasksInformation();
 
                     HashMap<Integer, String> taskStatusHash = new HashMap<>();
 

@@ -92,9 +92,8 @@ public class SchedulingTab extends JPanel {
                 f.getContentPane().add(jp);
 
                 String title = "Scheduling Graph " + PE;
-                if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY) {
-                    title = "Scheduling Graph " + (PE >> 8) + "x" + (PE & 0xFF);
-                }
+                title = "Scheduling Graph " + (PE >> 8) + "x" + (PE & 0xFF);
+                
                 f.setTitle(title);
                 URL url = this.getClass().getResource("/icon/scheduling_icon.png");
                 f.setIconImage(Toolkit.getDefaultToolkit().getImage(url));

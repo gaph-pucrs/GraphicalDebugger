@@ -24,7 +24,6 @@ public class MPSoCConfig {
     private TreeMap<Integer, String> taskNameHash;
     private int[] serviceReference;
     
-    private int routerAddressing;
     private int mpsoc_x = 3;
     private int mpsoc_y = 3;
     private int cluster_x = 3;
@@ -114,7 +113,6 @@ public class MPSoCConfig {
 
 
     
-    public static final int HAMILTONIAN = 0;
     public static final int XY = 1;
     
     public static ArrayList<Integer> TASK_ALLOCATION_SERVICES;
@@ -139,12 +137,6 @@ public class MPSoCConfig {
                 String[] configInfo = line.split(" ");
                 
                 switch(configInfo[0]){
-                    case "router_addressing":
-                        if (configInfo[1].equalsIgnoreCase("XY"))
-                            routerAddressing = XY;
-                        else
-                            routerAddressing = HAMILTONIAN;
-                        break;
                     case "mpsoc_x":
                         mpsoc_x = Integer.parseInt(configInfo[1]);
                         break;
@@ -344,8 +336,8 @@ public class MPSoCConfig {
         return serviceReference;
     }
     
-    public String HamAdressToXYLabel(int hamAddres){
-        int x = ham_to_xy_addr(hamAddres);
+    public String XYAdressToXYLabel(int xyAddr){
+        int x = xyAddr;
         int y;
         x = x & 0xFFFF;//limpar o header
         y = x & 0xFF;//elimina o endereco x
@@ -354,13 +346,37 @@ public class MPSoCConfig {
         return x+"x"+y;
     }
     
-    public int XYLabelToHamAddress(String xyLabel){
-        int x = Integer.parseInt(xyLabel.substring(0,xyLabel.indexOf("x")));
-        int y = Integer.parseInt(xyLabel.substring(xyLabel.indexOf("x")+1));
+       public int xy_to_index(int xy_addr){
+        int x, y;
+        x = xy_addr & 0xFFFF;//limpar o header
+        y = x & 0xFF;//elimina o endereco x
+        x = x >> 8;//elimina o endereco y
         
-        int xy_addr = x << 8 | y;
+        return ((y*mpsoc_x) + x);
+    }
+    
+    
+    public int index_to_xy(int index_addr){
+        int x, y;
         
-        return xy_to_ham_addr(xy_addr);
+        y = index_addr / mpsoc_x;
+        x = index_addr - (y * mpsoc_x);
+        
+        return (x << 8 | y);
+    }
+    
+    public int XYLabelToIndexAddress(String xyLabel){
+        String [] splited_line = xyLabel.split("x");
+        
+        int x = Integer.parseInt(splited_line[0]);
+        int y = Integer.parseInt(splited_line[1]);
+        
+        return xy_to_index((x << 8 | y));
+    }
+    
+    public String IndexAddressToXYLabel(int indexAddr){
+        int addr = index_to_xy(indexAddr);
+        return XYAdressToXYLabel(addr);
     }
     
     
@@ -386,12 +402,7 @@ public class MPSoCConfig {
         global_position_y = y_master*cluster_y + managerPosition_y;
     }
     
-    public int getPEType(int hamAddress){
-        int x = ham_to_xy_addr(hamAddress);
-        int y;
-        x = x & 0xFFFF;//limpar o header
-        y = x & 0xFF;//elimina o endereco x
-        x = x >> 8;//elimina o endereco y
+    public int getPEType(int x, int y){
         
         if (x < managerPosition_x || y < managerPosition_y)
             return SLAVE;
@@ -452,63 +463,15 @@ public class MPSoCConfig {
         return null;
     }
     
-    public int xy_to_ham_addr(int x) {
-      int y;
-        x = x & 0xFFFF;//limpar o header
-        y = x & 0xFF;//elimina o endereco x
-        x = x >> 8;//elimina o endereco y
-
-        if ((y % 2) == 1) {
-            return ((y * mpsoc_x) + (mpsoc_x - x) - 1);
-        }
-
-        return ((y * mpsoc_x) + x);
-
-    }
     
-
-
-    public int ham_to_xy_addr(int addr) {
-
-        int x = 0;
-        int y = 0;
-
-        addr = addr & 0xFF; //limpar o header
-
-        while (addr - mpsoc_x >= 0) {
-            addr -= mpsoc_x;
-            y++;
-        }
-
-        if ((y % 2) == 1) {
-            x = mpsoc_x - addr - 1;
-        } else {
-            x = addr;
-        }
-
-        return ((x << 8) | y);
-    }
-    
-    public boolean isMasterAddress(int hamRouterAddress){
-        int xyAddress= ham_to_xy_addr(hamRouterAddress);
+    public boolean isMasterAddress(int xyAddress){
         int xyMasterAddress = global_position_x << 8 | global_position_y;
         
         return (xyAddress == xyMasterAddress);
     }
     
-    public String XYAdressToXYLabel(int hamAddres){
-        int x = ham_to_xy_addr(hamAddres);
-        int y;
-        x = x & 0xFFFF;//limpar o header
-        y = x & 0xFF;//elimina o endereco x
-        x = x >> 8;//elimina o endereco y
-        
-        return x+""+y;
-    }
-
 
     public int getVizinho_cima(int router_address) {
-        router_address = ham_to_xy_addr(router_address);
         
         int y = router_address & 0xFF;
         int x = router_address >> 8;
@@ -516,57 +479,45 @@ public class MPSoCConfig {
         y++;
         
         if (y < mpsoc_y)
-            return xy_to_ham_addr((x << 8) | y);
+            return ((x << 8) | y);
         return -1;
     }
 
     public int getVizinho_baixo(int router_address) {
-        router_address = ham_to_xy_addr(router_address);
         int y = router_address & 0xFF;
         int x = router_address >> 8;
         
         y--;
         
         if (y >= 0)
-            return xy_to_ham_addr((x << 8) | y);
+            return ((x << 8) | y);
         return -1;
        
     }
 
     public int getVizinho_esquerda(int router_address) {
-        router_address = ham_to_xy_addr(router_address);
         int y = router_address & 0xFF;
         int x = router_address >> 8;
         
         x--;
         
         if (x >= 0)
-            return xy_to_ham_addr((x << 8) | y);
+            return ((x << 8) | y);
         return -1;
         
     }
 
     public int getVizinho_direita(int router_address) {
-        router_address = ham_to_xy_addr(router_address);
         int y = router_address & 0xFF;
         int x = router_address >> 8;
         
         x++;
         
         if (x < mpsoc_x)
-            return xy_to_ham_addr((x << 8) | y);
+            return ((x << 8) | y);
         return -1;
         
     }
-    
-    public int getXCoordinate(int ham_addr){
-        return ham_to_xy_addr(ham_addr) >> 8;
-    }
-    
-    public int getYCoordinate(int ham_addr){
-        return ham_to_xy_addr(ham_addr) & 0xFF;
-    }
-    
     
     public int getX_dimension() {
         return mpsoc_x;
@@ -666,10 +617,6 @@ public class MPSoCConfig {
 
     public TreeMap<Integer, String> getTaskNameHash() {
         return taskNameHash;
-    }
-
-    public int getRouterAddressing() {
-        return routerAddressing;
     }
 
     public int getManagerPosition_x() {

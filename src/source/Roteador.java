@@ -31,11 +31,8 @@ public class Roteador extends javax.swing.JPanel {
         this.needReset = true;
         initComponents();
         
-        router.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.HAMILTONIAN)
-            routerLabel.setText(Integer.toString(this.router_address));
-        else
-            routerLabel.setText(this.mPSoCConfig.HamAdressToXYLabel(this.router_address));
+        routerLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        routerLabel.setText(this.mPSoCConfig.XYAdressToXYLabel(this.router_address));
         //removeCornersArrows();
         routerLabel.setToolTipText("XY router address");
         noc1_label.setToolTipText("NoC 1");
@@ -192,11 +189,6 @@ public class Roteador extends javax.swing.JPanel {
 
         router.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         router.setMinimumSize(new java.awt.Dimension(300, 300));
-        router.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                routerMouseReleased(evt);
-            }
-        });
         router.setLayout(null);
 
         north_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
@@ -286,6 +278,11 @@ public class Roteador extends javax.swing.JPanel {
         routerLabel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         routerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         routerLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        routerLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                routerLabelMouseReleased(evt);
+            }
+        });
         router.add(routerLabel);
         routerLabel.setBounds(50, 10, 40, 20);
 
@@ -793,9 +790,9 @@ public class Roteador extends javax.swing.JPanel {
         in_east_NoC3.setBounds(160, 140, 30, 20);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void routerMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_routerMouseReleased
+    private void routerLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_routerLabelMouseReleased
         mainFrame.routerClicked(router_address);
-    }//GEN-LAST:event_routerMouseReleased
+    }//GEN-LAST:event_routerLabelMouseReleased
 
     public void updateThroughput(int port, float value){
         
@@ -863,6 +860,9 @@ public class Roteador extends javax.swing.JPanel {
         int x_master = mPSoCConfig.getManagerPosition_x();
         int y_master = mPSoCConfig.getManagerPosition_y();
         
+        int x = router_address >> 8;
+        int y = router_address & 0xFF;
+        
         needReset = false;
             
         //L1.5
@@ -882,7 +882,7 @@ public class Roteador extends javax.swing.JPanel {
         local_NoC3_out.repaint();
         
 
-        if (mPSoCConfig.getXCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//reset left
+        if (x != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_WEST) {//reset left
            
             out_weast_NoC1.setImagem("/images/undirected_h.png");
             out_weast_NoC1.repaint();
@@ -898,7 +898,7 @@ public class Roteador extends javax.swing.JPanel {
             in_weast_NoC3.repaint();
         }
         
-        if (mPSoCConfig.getXCoordinate(router_address) != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
+        if (x != x_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_EAST) {//reset right
             in_east_NoC2.setImagem("/images/left.png");
             in_east_NoC2.repaint();
             out_east_NoC2.setImagem("/images/undirected_h.png");
@@ -913,7 +913,7 @@ public class Roteador extends javax.swing.JPanel {
             out_east_NoC3.repaint();
         }
         
-        if (mPSoCConfig.getYCoordinate(router_address) != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
+        if (y != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             
             in_south_NoC1.setImagem("/images/up.png");
             in_south_NoC1.repaint();
@@ -929,7 +929,7 @@ public class Roteador extends javax.swing.JPanel {
             out_south_NoC3.repaint();
         }
         
-        if (mPSoCConfig.getYCoordinate(router_address) != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
+        if (y != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             out_north_NoC2.setImagem("/images/undirected_v.png");
             out_north_NoC2.repaint();
             in_north_NoC2.setImagem("/images/down.png");
@@ -946,25 +946,25 @@ public class Roteador extends javax.swing.JPanel {
         
         
         //Reset labels
-        if (mPSoCConfig.getXCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_WEST) {
+        if (x == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_WEST) {
             weast_NoC1_Label.setText("");
             weast_NoC2_Label.setText("");
             weast_NoC3_Label.setText("");
         }
         
-        if (mPSoCConfig.getXCoordinate(router_address) == x_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_EAST) {
+        if (x == x_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_EAST) {
             east_NoC1_Label.setText("");
             east_NoC2_Label.setText("");
             east_NoC3_Label.setText("");
         }
         
-        if (mPSoCConfig.getYCoordinate(router_address) == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
+        if (y == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
             south_NoC1_Label.setText("");
             south_NoC2_Label.setText("");
             south_NoC3_Label.setText("");
         }
         
-        if (mPSoCConfig.getYCoordinate(router_address) == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
+        if (y == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
             north_NoC1_Label.setText("");
             north_NoC2_Label.setText("");
             north_NoC3_Label.setText("");

@@ -34,10 +34,7 @@ public final class RouterInfoFrame extends javax.swing.JFrame implements WindowL
         this.mPSoCConfig = mPSoCConfig;
         this.router_address = routerInfo.getRouter_address();
         this.services = new int[0];
-        if (this.mPSoCConfig.getRouterAddressing() == MPSoCConfig.HAMILTONIAN)
-            this.setTitle("Router " + router_address + " Information");
-        else
-            this.setTitle("Router " + this.mPSoCConfig.HamAdressToXYLabel(this.router_address) + " Information");
+        this.setTitle("Router " + this.mPSoCConfig.XYAdressToXYLabel(this.router_address) + " Information");
         this.setLocation((int) (1 + Math.random() * 768), (int) (1 + Math.random() * 200));
         this.setVisible(true);
         initComponents();
@@ -203,10 +200,7 @@ public final class RouterInfoFrame extends javax.swing.JFrame implements WindowL
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         int router_addr = router_address;
-        if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-            router_addr = mPSoCConfig.ham_to_xy_addr(router_address);
-        }
-        schedulingPanel = new SchedulingTab(router_addr, mPSoCConfig);
+        schedulingPanel = new SchedulingTab(router_address, mPSoCConfig);
         PELogPanel = new PETextLog(router_addr, mPSoCConfig);
         jScrollPane1 = new javax.swing.JScrollPane();
         taskTable = new javax.swing.JTable();

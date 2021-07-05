@@ -41,11 +41,7 @@ public final class TaskInfoFrame extends javax.swing.JFrame {
     public TaskInfoFrame(int task_ID, boolean status, int executionTime, MPSoCConfig mPSoCConfig, ArrayList<TaskInformation> taskInformation, Image im, int router_address) {
         initComponents();
         this.setIconImage(im);
-        if (mPSoCConfig.getRouterAddressing() == MPSoCConfig.XY){
-            this.router_address = mPSoCConfig.ham_to_xy_addr(router_address);
-        } else {
-            this.router_address = router_address;
-        }
+        this.router_address = router_address;
         this.task_ID = task_ID;
         this.status = status;
         this.executionTime = executionTime;
