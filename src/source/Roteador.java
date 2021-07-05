@@ -913,7 +913,7 @@ public class Roteador extends javax.swing.JPanel {
             out_east_NoC3.repaint();
         }
         
-        if (y != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
+        if (y != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             
             in_south_NoC1.setImagem("/images/up.png");
             in_south_NoC1.repaint();
@@ -929,7 +929,7 @@ public class Roteador extends javax.swing.JPanel {
             out_south_NoC3.repaint();
         }
         
-        if (y != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
+        if (y != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             out_north_NoC2.setImagem("/images/undirected_v.png");
             out_north_NoC2.repaint();
             in_north_NoC2.setImagem("/images/down.png");
@@ -958,13 +958,13 @@ public class Roteador extends javax.swing.JPanel {
             east_NoC3_Label.setText("");
         }
         
-        if (y == 0 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
+        if (y == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_SOUTH) {
             south_NoC1_Label.setText("");
             south_NoC2_Label.setText("");
             south_NoC3_Label.setText("");
         }
         
-        if (y == y_dimension - 1 && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
+        if (y == 0  && peripheralPosition != MPSoCConfig.PERIPH_POS_NORTH) {
             north_NoC1_Label.setText("");
             north_NoC2_Label.setText("");
             north_NoC3_Label.setText("");

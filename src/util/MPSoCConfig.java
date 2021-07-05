@@ -471,7 +471,7 @@ public class MPSoCConfig {
     }
     
 
-    public int getVizinho_cima(int router_address) {
+    public int getVizinho_baixo(int router_address) {
         
         int y = router_address & 0xFF;
         int x = router_address >> 8;
@@ -483,7 +483,7 @@ public class MPSoCConfig {
         return -1;
     }
 
-    public int getVizinho_baixo(int router_address) {
+    public int getVizinho_cima(int router_address) {
         int y = router_address & 0xFF;
         int x = router_address >> 8;
         

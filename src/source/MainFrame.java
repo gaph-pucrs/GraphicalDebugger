@@ -1133,7 +1133,8 @@ public final class MainFrame extends javax.swing.JFrame {
         int pe_type = 0;
         
         cons.gridy = 0;
-        for (int y = mpsocConfig.getY_dimension() - 1; y >= 0; y--) {
+        for (int y = 0; y < mpsocConfig.getY_dimension(); y++) {
+        //for (int y = mpsocConfig.getY_dimension() - 1; y >= 0; y--) {
             cons.gridx = 0;
             for (int x = 0; x < mpsocConfig.getX_dimension(); x++) {
                 cons.gridx++;
@@ -1156,9 +1157,9 @@ public final class MainFrame extends javax.swing.JFrame {
         peripheralPanel.setLayout(gridBagLayoutPeriph);
         
         consPeriph.gridx = 0;
-        for (int y = mpsocConfig.getY_dimension() - 1; y >= 0; y--) {
+        for (int y = 0; y < mpsocConfig.getY_dimension(); y++) {
             consPeriph.gridy = y;
-            if (y==mpsocConfig.getY_dimension() - 1){
+            if (y==0){
                 int peripheral_attached_router = 0; //MAKE THIS DYNAMIC
                 peripheralPanel.add(new ChipsetPeripheral(this, peripheral_attached_router, mpsocConfig, MPSoCConfig.PERIPH_POS_WEST), consPeriph);
             } else {
@@ -1273,7 +1274,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.EAST3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (y != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
+        if (y != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_SOUTH) { //reset down
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.SOUTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.SOUTH0) * percent;
             router.updateThroughput(MPSoCConfig.SOUTH1, portThroughput);
@@ -1289,7 +1290,7 @@ public final class MainFrame extends javax.swing.JFrame {
             router.updateThroughput(MPSoCConfig.SOUTH3, portThroughput);
             portsThroughputCounter += portThroughput;
         }
-        if (y != y_dimension - 1 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
+        if (y != 0 || peripheralPosition == MPSoCConfig.PERIPH_POS_NORTH) { //reset up
             portThroughput = routerInfo.getPortBandwidthThroughputInCycles(MPSoCConfig.NORTH1) * percent;
             //portThroughput = routerInfo.getPortThroughputInFlits(MPSoCConfig.NORTH0) * percent;
             router.updateThroughput(MPSoCConfig.NORTH1, portThroughput);
