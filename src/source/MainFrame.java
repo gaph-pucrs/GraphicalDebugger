@@ -7,6 +7,7 @@ package source;
 import deloream.DeloreamMainFrame;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -36,6 +37,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import source.header_decoder.Decoder;
 import util.AboutFrame;
 import util.MPSoCConfig;
 
@@ -93,6 +95,7 @@ public final class MainFrame extends javax.swing.JFrame {
         playButton.setEnabled(false);
         goButton.setEnabled(false);
         printRouterTotalLinkUsageMenuItem.setVisible(false);
+        currentPacketTable.setCursor(new Cursor(Cursor.HAND_CURSOR));
         //initMPSoC();
         if (args.length > 0){
             if (!new File(args[0]).exists()){
@@ -231,6 +234,11 @@ public final class MainFrame extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        currentPacketTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                currentPacketTableMouseReleased(evt);
             }
         });
         jScrollPane1.setViewportView(currentPacketTable);
@@ -984,6 +992,10 @@ public final class MainFrame extends javax.swing.JFrame {
         
        
     }//GEN-LAST:event_packetFormatMenuItemActionPerformed
+
+    private void currentPacketTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_currentPacketTableMouseReleased
+        new Decoder(mPSoCInformation.getCurrentHeader());
+    }//GEN-LAST:event_currentPacketTableMouseReleased
 
     
     private void showMessageList(){

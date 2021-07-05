@@ -24,11 +24,13 @@ public final class ReadTrafficData {
     private int packetReadControl;
     private ArrayList<PacketInformation> allPackets;
     private MPSoCConfig mPSoCConfig;
+    private String currentHeader;
 
     public ReadTrafficData(MPSoCConfig mPSoCConfig) throws IOException {
         this.mPSoCConfig = mPSoCConfig;
         resetPacketCounter();
         allPackets = new ArrayList<PacketInformation>();
+        currentHeader = "";
         
         File f = new File(this.mPSoCConfig.getDebugDirPath()+"/traffic_router.txt");
         if (f.exists()) {
@@ -70,6 +72,10 @@ public final class ReadTrafficData {
            return searchPacketTime(time, min+((max-min)/2), max);
        
        return searchPacketTime(time, min, min+((max-min)/2));
+    }
+    
+    public String getCurrentHeader(){
+        return this.currentHeader;
     }
     
     
@@ -128,6 +134,7 @@ public final class ReadTrafficData {
             noc = extractNoC(splitedLine[5]);
             input_port = extractInputPort(splitedLine[6], noc);
             target_router = extractRouterAddress(splitedLine[7]);
+            //this.currentHeader = splitedLine[8]; //Uncomment this line to read the fullheader information
 
             /*if (splitedLine.length > 7){ //Maybe do this latter
                 task_source = Integer.parseInt(splitedLine[7]);

@@ -38,6 +38,10 @@ public final class MPSoCInformation {
         //PE_Information.put(mPSoCConfig.getChipset_id(), new RouterInformation(mPSoCConfig, mPSoCConfig.getChipset_id()));
         
     }
+    
+    public String getCurrentHeader(){
+        return this.readTraffic.getCurrentHeader();
+    }
 
     public int getPacketCounterByTime(int time) { //retorna o numero de pacotes ate chegar no tempo desejado
         int counter = readTraffic.getPacketCounterByTime(time);
