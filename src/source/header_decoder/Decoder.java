@@ -21,6 +21,10 @@ import javax.swing.UIManager;
 public class Decoder extends javax.swing.JFrame {
   
     LinkedList<MessageType> messages;
+    
+    private static final int FLIT1 = 1;
+    private static final int FLIT2 = 2;
+    private static final int FLIT3 = 3;
       
      
     public Decoder(String headerHex) {
@@ -80,7 +84,7 @@ public class Decoder extends javax.swing.JFrame {
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
-        decode();
+        decode(FLIT1);
     
     }
     
@@ -104,7 +108,7 @@ public class Decoder extends javax.swing.JFrame {
         return "Wrong Message Value";
     }
 
-    private void decode(){
+    private void decode(int flit){
         try { //800000008084C008
             if (headerValueTextField.getText().toString().length() > 16){
                 System.out.println("Error: Input <"+headerValueTextField.getText().toString()+"> has a length > 16");
@@ -124,48 +128,135 @@ public class Decoder extends javax.swing.JFrame {
             
             int INVERTER = 63;
             int start_index, end_index;
+            String parcial_value;
             
-            start_index = INVERTER - 63;
-            end_index   = INVERTER - 50;
-            String parcial_value = result.substring(start_index, ++end_index);
-            labelChipId.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
-            
-            start_index = INVERTER - 49;
-            end_index   = INVERTER - 42;
-            parcial_value = result.substring(start_index, ++end_index);
-            labelXpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
-            
-            start_index = INVERTER - 41;
-            end_index   = INVERTER - 34;
-            parcial_value = result.substring(start_index, ++end_index);
-            labelYpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
-            
-            start_index = INVERTER - 33;
-            end_index   = INVERTER - 30;
-            parcial_value = result.substring(start_index, ++end_index);
-            labelFBITS.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
-            
-            start_index = INVERTER - 29;
-            end_index   = INVERTER - 22;
-            parcial_value = result.substring(start_index, ++end_index);
-            labelPayloadLenght.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
-            
-            start_index = INVERTER - 21;
-            end_index   = INVERTER - 14;
-            parcial_value = result.substring(start_index, ++end_index);
-            int msg_value = Integer.parseInt(parcial_value, 2);
-            labelMessaegType.setText(getMessageName(msg_value));
-            labelMessaegType.setToolTipText(getMessageDescription(msg_value));
-            
-            start_index = INVERTER - 13;
-            end_index   = INVERTER - 6;
-            parcial_value = result.substring(start_index, ++end_index);
-            labelMSHR.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
-            
-            start_index = INVERTER - 5;
-            end_index   = INVERTER - 0;
-            parcial_value = result.substring(start_index, ++end_index);
-            labelReserved.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+            switch(flit){
+                case FLIT1:
+                    
+                    jLabel1.setText("ChipID:");
+                    start_index = INVERTER - 63;
+                    end_index   = INVERTER - 50;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelChipId.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel2.setText("Xpos:");
+                    start_index = INVERTER - 49;
+                    end_index   = INVERTER - 42;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelXpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel3.setText("Ypos:");
+                    start_index = INVERTER - 41;
+                    end_index   = INVERTER - 34;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelYpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel4.setText("FBITS:");
+                    start_index = INVERTER - 33;
+                    end_index   = INVERTER - 30;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelFBITS.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel5.setText("PayloadLengh:");
+                    start_index = INVERTER - 29;
+                    end_index   = INVERTER - 22;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelPayloadLenght.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel6.setText("Message Type:");
+                    start_index = INVERTER - 21;
+                    end_index   = INVERTER - 14;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    int msg_value = Integer.parseInt(parcial_value, 2);
+                    labelMessaegType.setText(getMessageName(msg_value));
+                    labelMessaegType.setToolTipText(getMessageDescription(msg_value));
+
+                    jLabel7.setText("MSHR/TAG:");
+                    start_index = INVERTER - 13;
+                    end_index   = INVERTER - 6;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelMSHR.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel8.setText("Reserved:");
+                    start_index = INVERTER - 5;
+                    end_index   = INVERTER - 0;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelReserved.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+                    break;
+               
+                case FLIT2:
+                    
+                    jLabel1.setText("Address:");
+                    start_index = INVERTER - 63;
+                    end_index   = INVERTER - 16;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelChipId.setText(String.valueOf(Long.toHexString(Long.parseLong(parcial_value, 2))));
+                    
+                    jLabel2.setText("Options:");
+                    start_index = INVERTER - 15;
+                    end_index   = INVERTER - 0;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelXpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+                    
+                    
+                    jLabel3.setText("");
+                    jLabel4.setText("");
+                    jLabel5.setText("");
+                    jLabel6.setText("");
+                    jLabel7.setText("");
+                    jLabel8.setText("");
+                    labelYpos.setText("");
+                    labelFBITS.setText("");
+                    labelPayloadLenght.setText("");
+                    labelMessaegType.setText("");
+                    labelMSHR.setText("");
+                    labelReserved.setText("");
+                    
+                    break;
+                    
+                case FLIT3:
+                    
+                    jLabel1.setText("Src ChipID:");
+                    start_index = INVERTER - 63;
+                    end_index   = INVERTER - 50;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelChipId.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+                    
+                    jLabel2.setText("Src Xpos:");
+                    start_index = INVERTER - 49;
+                    end_index   = INVERTER - 42;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelXpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel3.setText("Src Ypos:");
+                    start_index = INVERTER - 41;
+                    end_index   = INVERTER - 34;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelYpos.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+                    
+                    jLabel4.setText("Src FBITS:");
+                    start_index = INVERTER - 33;
+                    end_index   = INVERTER - 30;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelFBITS.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+
+                    jLabel5.setText("Src Option:");
+                    start_index = INVERTER - 29;
+                    end_index   = INVERTER - 0;
+                    parcial_value = result.substring(start_index, ++end_index);
+                    labelPayloadLenght.setText(String.valueOf(Integer.parseInt(parcial_value, 2)));
+                    
+                    
+                    jLabel6.setText("");
+                    jLabel7.setText("");
+                    jLabel8.setText("");
+                    labelMessaegType.setText("");
+                    labelMSHR.setText("");
+                    labelReserved.setText("");
+                    
+                    break;
+                    
+            }
             
         } catch (Exception e) {
             labelChipId.setText("wrong input format");
@@ -208,6 +299,8 @@ public class Decoder extends javax.swing.JFrame {
         labelReserved = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jComboBoxFlitType = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.white);
@@ -228,7 +321,7 @@ public class Decoder extends javax.swing.JFrame {
 
         jLabel2.setText("Xpos:");
 
-        jLabel3.setText("Ypos");
+        jLabel3.setText("Ypos:");
 
         jLabel4.setText("FBITS:");
 
@@ -257,6 +350,15 @@ public class Decoder extends javax.swing.JFrame {
         labelReserved.setText("jLabel9");
 
         jLabel9.setText("Header (hex):");
+
+        jComboBoxFlitType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FLIT1", "FLIT2", "FLIT3"}));
+        jComboBoxFlitType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxFlitTypeActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("Flit Type");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -293,6 +395,12 @@ public class Decoder extends javax.swing.JFrame {
                         .addGap(0, 112, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxFlitType, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,7 +443,11 @@ public class Decoder extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(labelReserved))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxFlitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addContainerGap())
         );
 
         pack();
@@ -346,12 +458,20 @@ public class Decoder extends javax.swing.JFrame {
     }//GEN-LAST:event_headerValueTextFieldActionPerformed
 
     private void KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_KeyReleased
-        decode();
+        int flit = jComboBoxFlitType.getSelectedIndex() + 1; //+1 because index start in 0
+        decode(flit);
     }//GEN-LAST:event_KeyReleased
+
+    private void jComboBoxFlitTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFlitTypeActionPerformed
+        int flit = jComboBoxFlitType.getSelectedIndex() + 1; //+1 because index start in 0
+        decode(flit);
+    }//GEN-LAST:event_jComboBoxFlitTypeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField headerValueTextField;
+    private javax.swing.JComboBox<String> jComboBoxFlitType;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
