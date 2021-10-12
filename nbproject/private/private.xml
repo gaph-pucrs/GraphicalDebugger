@@ -5,6 +5,7 @@
         <group>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/MainFrame.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/RouterInformation.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/header_decoder/Decoder.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/Roteador.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/MPSoCInformation.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/util/MPSoCConfig.java</file>

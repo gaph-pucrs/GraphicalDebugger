@@ -137,7 +137,7 @@ public class PETextLog extends javax.swing.JPanel {
             String y = Integer.toString(PE & 0xFF);
             String router_name = x+"x"+y;
                 
-            RandomAccessFile rf = new RandomAccessFile(mPSoCConfig.getTestcasePath() + "/log/log"+router_name+".txt", "r");
+            RandomAccessFile rf = new RandomAccessFile(mPSoCConfig.getTestcasePath() + "/debug/log/log_"+router_name+".log", "r");
             String line;
             String text = "";
             

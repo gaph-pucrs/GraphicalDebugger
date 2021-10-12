@@ -32,6 +32,8 @@ public class Roteador extends javax.swing.JPanel {
         initComponents();
         
         routerLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        router.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        routerLabel.setForeground(Color.BLUE.darker());
         routerLabel.setText(this.mPSoCConfig.XYAdressToXYLabel(this.router_address));
         //removeCornersArrows();
         routerLabel.setToolTipText("XY router address");
@@ -189,6 +191,11 @@ public class Roteador extends javax.swing.JPanel {
 
         router.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         router.setMinimumSize(new java.awt.Dimension(300, 300));
+        router.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                routerMouseReleased(evt);
+            }
+        });
         router.setLayout(null);
 
         north_NoC2_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
@@ -284,7 +291,7 @@ public class Roteador extends javax.swing.JPanel {
             }
         });
         router.add(routerLabel);
-        routerLabel.setBounds(50, 10, 40, 20);
+        routerLabel.setBounds(45, 10, 40, 20);
 
         north_NoC3_Label.setFont(new java.awt.Font("Andale Mono", 0, 10)); // NOI18N
         north_NoC3_Label.setText("00");
@@ -793,6 +800,10 @@ public class Roteador extends javax.swing.JPanel {
     private void routerLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_routerLabelMouseReleased
         mainFrame.routerClicked(router_address);
     }//GEN-LAST:event_routerLabelMouseReleased
+
+    private void routerMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_routerMouseReleased
+        mainFrame.routerClicked(router_address);
+    }//GEN-LAST:event_routerMouseReleased
 
     public void updateThroughput(int port, float value){
         
