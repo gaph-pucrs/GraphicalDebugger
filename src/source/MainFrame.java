@@ -5,6 +5,7 @@
 package source;
 
 import deloream.DeloreamMainFrame;
+import energyMemory.energyMemGUI.MainEnergyMemoryFrame;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -196,6 +197,7 @@ public final class MainFrame extends javax.swing.JFrame {
         deloreamMenuItem = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         taskMappingMenuItem = new javax.swing.JMenuItem();
+        jMenuItemEnergyMemoryProf = new javax.swing.JMenuItem();
         serviceListMenuItem = new javax.swing.JMenuItem();
         taskListMenuItem = new javax.swing.JMenuItem();
         messageLogMenuItem = new javax.swing.JMenuItem();
@@ -462,6 +464,15 @@ public final class MainFrame extends javax.swing.JFrame {
             }
         });
         deloreamMenuItem.add(taskMappingMenuItem);
+
+        jMenuItemEnergyMemoryProf.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemEnergyMemoryProf.setText("Energy and Memory Profiler");
+        jMenuItemEnergyMemoryProf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEnergyMemoryProfActionPerformed(evt);
+            }
+        });
+        deloreamMenuItem.add(jMenuItemEnergyMemoryProf);
 
         serviceListMenuItem.setText("Services List");
         serviceListMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -996,6 +1007,31 @@ public final class MainFrame extends javax.swing.JFrame {
     private void currentPacketTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_currentPacketTableMouseReleased
         new Decoder(mPSoCInformation.getCurrentHeader());
     }//GEN-LAST:event_currentPacketTableMouseReleased
+
+    private void jMenuItemEnergyMemoryProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEnergyMemoryProfActionPerformed
+        new Thread() {
+            @Override
+            public void run() {
+                MainEnergyMemoryFrame energyEvaluationFrame = null;
+                if (mpsocConfig == null){
+                    energyEvaluationFrame = new MainEnergyMemoryFrame();
+                } else { 
+                    energyEvaluationFrame = new MainEnergyMemoryFrame(mpsocConfig.getX_dimension(), mpsocConfig.getY_dimension(), mpsocConfig.getDebugDirPath());
+                }
+                
+                energyEvaluationFrame.setVisible(true);
+                
+                
+                URL url = this.getClass().getResource("/icon/energy_icon.png");
+                energyEvaluationFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(url));
+
+                energyEvaluationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                energyEvaluationFrame.pack();
+                energyEvaluationFrame.setVisible(true);
+
+            }
+        }.start();
+    }//GEN-LAST:event_jMenuItemEnergyMemoryProfActionPerformed
 
     
     private void showMessageList(){
@@ -1699,6 +1735,7 @@ public final class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItemEnergyMemoryProf;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
