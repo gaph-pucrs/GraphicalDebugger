@@ -256,6 +256,7 @@ public class PlotGeneratorMainTab extends JPanel{
                     } else {
                         value = (float)energyInfo.getEnergyMemory().computeTileWindow_L1_D_miss_rate(tileAddr, w, w+window_size);
                     }
+                    perWindow = true; //Avoid erros in matplotlib since non per window always increment
                     break;
                 case L1_I_ACCESS:
                     if (tileAddr == -1){
@@ -277,6 +278,7 @@ public class PlotGeneratorMainTab extends JPanel{
                     } else {
                         value = (float)energyInfo.getEnergyMemory().computeTileWindow_L1_I_miss_rate(tileAddr, w, w+window_size);
                     }
+                    perWindow = true; //Avoid erros in matplotlib since non per window always increment
                     break;
                     
                 case L2_ACCESS:
@@ -299,6 +301,7 @@ public class PlotGeneratorMainTab extends JPanel{
                     } else {
                         value = (float)energyInfo.getEnergyMemory().computeTileWindow_L2_miss_rate(tileAddr, w, w+window_size);
                     }
+                    perWindow = true; //Avoid erros in matplotlib since non per window always increment
                     break;
                 case AMO_ACCESS:
                     if (tileAddr == -1){
@@ -333,6 +336,34 @@ public class PlotGeneratorMainTab extends JPanel{
             }
         }
         
+        float rate_average = 0f;
+        if (tileAddr != -1){
+            switch (memStatistic) {
+                case L1_D_MISS_RATE:
+                    rate_average = energyInfo.getEnergyMemory().computeTile_L1_D_miss_rate(tileAddr);
+                    break;
+                case L1_I_MISS_RATE:
+                    rate_average = energyInfo.getEnergyMemory().computeTile_L1_I_miss_rate(tileAddr);
+                    break;
+                case L2_MISS_RATE:
+                    rate_average = energyInfo.getEnergyMemory().computeTile_L2_miss_rate(tileAddr);
+                    break;
+            }
+        } else {
+            switch (memStatistic) {
+                case L1_D_MISS_RATE:
+                    rate_average = energyInfo.getEnergyMemory().computeTotal_L1_D_miss_rate();
+                    break;
+                case L1_I_MISS_RATE:
+                    rate_average = energyInfo.getEnergyMemory().computeTotal_L1_I_miss_rate();
+                    break;
+                case L2_MISS_RATE:
+                    rate_average = energyInfo.getEnergyMemory().computeTotal_L2_miss_rate();
+                    break;
+            }
+        }
+        
+        
         
         String showPlot = "False";
         if (newWindow){
@@ -359,7 +390,8 @@ public class PlotGeneratorMainTab extends JPanel{
                 plotName+" "+
                 controlPanel.getWindowSize_Kcyles()+
                 " "+max_y+" "+
-                showPlot;
+                showPlot+" "+
+                rate_average;
         
         
         runCommand(command);

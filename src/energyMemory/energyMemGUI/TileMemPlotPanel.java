@@ -100,19 +100,19 @@ public class TileMemPlotPanel extends JPanel implements MouseListener{
         switch(plotType){
             case PLOT_L1_D_MISS_RATE:
                 total_y_value = energyMemory.computeTile_L1_D_miss_rate(tileAddr);
-                title = "L1-D Miss Rate. Total="+String.format("%.2f", total_y_value);
+                title = "L1-D Miss Rate. Total="+String.format("%.2f", total_y_value*100)+"%";
                 break;
             case PLOT_L1_I_MISS_RATE:
                 total_y_value = energyMemory.computeTile_L1_I_miss_rate(tileAddr);
-                title = "L1-I Miss Rate. Total="+String.format("%.2f", total_y_value);
+                title = "L1-I Miss Rate. Total="+String.format("%.2f", total_y_value*100)+"%";
                 break;
             case PLOT_L2_MISS_RATE:
                 total_y_value = energyMemory.computeTile_L2_miss_rate(tileAddr);
-                title = "L2 Miss Rate. Total="+String.format("%.2f", total_y_value);
+                title = "L2 Miss Rate. Total="+String.format("%.2f", total_y_value*100)+"%";
                 break;
             case PLOT_DRAM_ACCESS:
                 total_y_value = energyMemory.getTile_LOAD_MEM(tileAddr);
-                title = "LOAD_MEM Access. Total="+String.format("%.2f", total_y_value);
+                title = "LOAD_MEM Access. Total="+String.format("%.2f", total_y_value*100)+"%";
                 break;
         }
         
@@ -201,9 +201,10 @@ public class TileMemPlotPanel extends JPanel implements MouseListener{
         
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(new Color(108, 152, 3, 100));
+        g2d.setColor(new Color(0x009900));
         //Increase line size
-        BasicStroke dashed = new BasicStroke(3);
+        float dashWidth[] = {3.0f};
+        BasicStroke dashed = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dashWidth, 0.0f);
         g2d.setStroke(dashed);
         
         //Legend - total tile value
@@ -215,9 +216,9 @@ public class TileMemPlotPanel extends JPanel implements MouseListener{
         
         //Total y value added over the green line at right
         y_pos = plot_height - (total_y_value * plot_height) + PLOT_GAP;
-        g2d.draw(new Line2D.Float(PLOT_GAP, y_pos, PLOT_GAP+plot_width+PLOT_INNER_VALUE_MARKER_LENGHT, y_pos));
-        text_string = String.format("%.2f", total_y_value);
-        g2.drawString(text_string, PLOT_GAP, y_pos);
+        g2d.draw(new Line2D.Float(PLOT_GAP, y_pos, PLOT_GAP+plot_width, y_pos));
+        text_string = String.format("%.2f", total_y_value*100)+"%";
+        g2.drawString(text_string, PLOT_GAP+3, y_pos-3);
         
         
         //Draw the value per window
