@@ -217,7 +217,7 @@ public class PlotGeneratorMainTab extends JPanel{
     
     
     private void runCommand(String command){
-        System.out.println("Command: "+command);
+        //System.out.println("Command: "+command);
         
         String message = "Executed Command: "+command;
         
