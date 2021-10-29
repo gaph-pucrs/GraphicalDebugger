@@ -59,7 +59,7 @@ public class OverviewEnergyTab extends javax.swing.JPanel {
         }
         
         if (controlPanel.isNormalize_window()){
-            controlPanel.setMaxValueEnergyTile_mJ(0);
+            controlPanel.setMaxValueEnergyTile_nJ(0);
         }
         
         controlPanel.resetWindow();
@@ -92,8 +92,8 @@ public class OverviewEnergyTab extends javax.swing.JPanel {
                 System.out.println("total Energy: "+energyInfo.computeTotalTileEnergy(addr));
                 System.out.println("------------------");*/
                 
-                if (tile_energy > controlPanel.getMaxValueEnergyTile_mJ() && controlPanel.isNormalize_window()){
-                    controlPanel.setMaxValueEnergyTile_mJ(tile_energy);
+                if (tile_energy > controlPanel.getMaxValueEnergyTile_nJ() && controlPanel.isNormalize_window()){
+                    controlPanel.setMaxValueEnergyTile_nJ(tile_energy);
                     window_change = true;
                 }
                 

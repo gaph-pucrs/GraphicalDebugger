@@ -101,6 +101,8 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
         for (MemoryStatisticType option: MemoryStatisticType.values()) { 
             jComboBoxWhat.addItem(option.text);
         }
+        jLabelNormalized.setVisible(false);
+        jCheckBoxNormalized.setVisible(false);
         
     }
 
@@ -113,13 +115,12 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jLabelNormalized = new javax.swing.JLabel();
         jComboBoxWhat = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jComboBoxToWho = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jCheckBoxNormalized = new javax.swing.JCheckBox();
-        jButtonGenerateNewWin = new javax.swing.JButton();
         jButtonGenerate = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jCheckBoxPerWindow = new javax.swing.JCheckBox();
@@ -127,9 +128,9 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createTitledBorder("Energy"));
         setLayout(null);
 
-        jLabel1.setText("Normalized?");
-        add(jLabel1);
-        jLabel1.setBounds(200, 90, 90, 17);
+        jLabelNormalized.setText("Normalized?");
+        add(jLabelNormalized);
+        jLabelNormalized.setBounds(200, 90, 90, 17);
 
         jComboBoxWhat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         add(jComboBoxWhat);
@@ -156,23 +157,14 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
         add(jCheckBoxNormalized);
         jCheckBoxNormalized.setBounds(200, 110, 51, 24);
 
-        jButtonGenerateNewWin.setText("Gen. New Window");
-        jButtonGenerateNewWin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonGenerateNewWinActionPerformed(evt);
-            }
-        });
-        add(jButtonGenerateNewWin);
-        jButtonGenerateNewWin.setBounds(130, 150, 140, 29);
-
-        jButtonGenerate.setText("Generate");
+        jButtonGenerate.setText("Generate Plot - Matplotlib");
         jButtonGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonGenerateActionPerformed(evt);
             }
         });
         add(jButtonGenerate);
-        jButtonGenerate.setBounds(20, 150, 90, 29);
+        jButtonGenerate.setBounds(20, 150, 250, 29);
 
         jLabel4.setText("Per Window?");
         add(jLabel4);
@@ -189,12 +181,19 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateActionPerformed
-        generate(false);
+        
+        new Thread() {
+            @Override
+            public void run() {
+                generate(true);
+            }
+        }.start();
+       
     }//GEN-LAST:event_jButtonGenerateActionPerformed
 
     
     private void generate(boolean newWindow){
-              int tileAddr = -1;
+        int tileAddr = -1;
         String toWho = jComboBoxToWho.getSelectedItem().toString();
         if (!toWho.equals("All System")){
             String [] addr = toWho.split(" ")[1].split("x");
@@ -221,10 +220,6 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
         }
     }
     
-    private void jButtonGenerateNewWinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGenerateNewWinActionPerformed
-        generate(true);
-    }//GEN-LAST:event_jButtonGenerateNewWinActionPerformed
-
     private void jCheckBoxPerWindowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPerWindowActionPerformed
         if (jCheckBoxPerWindow.isSelected()){
             jCheckBoxPerWindow.setText("Yes");
@@ -244,14 +239,13 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonGenerate;
-    private javax.swing.JButton jButtonGenerateNewWin;
     private javax.swing.JCheckBox jCheckBoxNormalized;
     private javax.swing.JCheckBox jCheckBoxPerWindow;
     private javax.swing.JComboBox<String> jComboBoxToWho;
     private javax.swing.JComboBox<String> jComboBoxWhat;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabelNormalized;
     // End of variables declaration//GEN-END:variables
 }

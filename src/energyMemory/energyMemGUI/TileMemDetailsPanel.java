@@ -215,9 +215,6 @@ public class TileMemDetailsPanel extends JPanel implements KeyListener, MouseWhe
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_CONTROL){
-            crtl_pressed = false;
-        }
     }
 
     @Override

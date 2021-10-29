@@ -193,7 +193,7 @@ public class TileEnergyPlot extends JPanel implements MouseListener{
             //Y final value - always 1 (is a ration)
             g2.drawString("1", PLOT_GAP-12, PLOT_GAP+10);
         } else {
-            text_string = "mJ";
+            text_string = "nJ";
         }
         g2.drawString(text_string, PLOT_GAP-13, PLOT_GAP + (plot_height/2));
         

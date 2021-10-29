@@ -32,14 +32,6 @@ public class ControlPanel {
     //Flit energy 1hop: //Paper: Power and Energy Characterization of an Open Source 25-Core Manycore Processor (2nd paragraph of page 8)
     public static float ENERGY_NJ_PER_FLIT               = 0.01116f; //11.16 pJ
 
-    public boolean isNormalize_window() {
-        return normalize_window;
-    }
-
-    public void setNormalize_window(boolean normalize_window) {
-        this.normalize_window = normalize_window;
-    }
-
     
     public enum TilePlotType{
         PLOT_ENERGY,
@@ -57,10 +49,12 @@ public class ControlPanel {
     private int freq_MHz;
     private float voltagem_V;
     private int windowSize_Kcyles;
-    private float maxEnergyTile_mJ;
-    private float maxAccessNumberTile;
+    private float maxEnergyTile_nJ;
+    private float maxMemoryNumber;
     private int simultime_cycles;
     private boolean normalize_window;
+    
+    private String debugPath;
     
     private int min_window_time;
     private int max_window_time;
@@ -73,14 +67,15 @@ public class ControlPanel {
     private boolean tab_memory_enabled;
     
 
-    public ControlPanel(int XDIM, int YDIM) {
+    public ControlPanel(int XDIM, int YDIM, String debugPath) {
         this.XDIM = XDIM;
         this.YDIM = YDIM;
+        this.debugPath = debugPath;
         update = false;
         freq_MHz = 500;
         voltagem_V = 1.0f;
-        maxEnergyTile_mJ = 0;
-        maxAccessNumberTile = 0;
+        maxEnergyTile_nJ = 0;
+        maxMemoryNumber = 0;
         simultime_cycles = 0;
         tab_energy_enabled = false;
         tab_memory_enabled = false;
@@ -112,6 +107,18 @@ public class ControlPanel {
         max_window_time = (windowSize_Kcyles*1000) + min_window_time;
     }
     
+    public boolean isNormalize_window() {
+        return normalize_window;
+    }
+
+    public void setNormalize_window(boolean normalize_window) {
+        this.normalize_window = normalize_window;
+    }
+
+    public String getDebugPath() {
+        return debugPath;
+    }
+    
     public boolean isUpdate() {
         return update;
     }
@@ -140,21 +147,21 @@ public class ControlPanel {
         return windowSize_Kcyles;
     }
 
-    public float getMaxValueEnergyTile_mJ() {
-        return maxEnergyTile_mJ;
+    public float getMaxValueEnergyTile_nJ() {
+        return maxEnergyTile_nJ;
     }
 
-    public void setMaxValueEnergyTile_mJ(float maxEnergyTile_mJ) {
-        //mJ for Energy and # access for memory
-        this.maxEnergyTile_mJ = maxEnergyTile_mJ;
+    public void setMaxValueEnergyTile_nJ(float maxEnergyTile_nJ) {
+        //nJ for Energy and # access for memory
+        this.maxEnergyTile_nJ = maxEnergyTile_nJ;
     }
     
-     public float getMaxAccessNumberTile() {
-        return maxAccessNumberTile;
+     public float getMaxMemoryNumber() {
+        return maxMemoryNumber;
     }
 
-    public void setMaxAccessNumberTile(float maxAccessNumberTile) {
-        this.maxAccessNumberTile = maxAccessNumberTile;
+    public void setMaxMemoryNumber(float maxAccessNumberTile) {
+        this.maxMemoryNumber = maxAccessNumberTile;
     }
     
     public int getSimultime_cycles() {

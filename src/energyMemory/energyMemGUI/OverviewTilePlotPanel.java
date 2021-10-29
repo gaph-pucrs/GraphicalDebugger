@@ -120,12 +120,12 @@ public class OverviewTilePlotPanel extends JPanel implements MouseMotionListener
         switch(tilePlotType){
             case PLOT_ENERGY:
                 g2.setColor(new Color(0, 0, 0xff, 80));
-                max_value = controlPanel.getMaxValueEnergyTile_mJ();
-                unit = "mJ";
+                max_value = controlPanel.getMaxValueEnergyTile_nJ();
+                unit = "nJ";
                 break;
             case PLOT_MEMORY:
                 g2.setColor(new Color(108, 152, 3, 100));
-                max_value = controlPanel.getMaxAccessNumberTile();
+                max_value = controlPanel.getMaxMemoryNumber();
                 unit = "#";
                 break;
         }

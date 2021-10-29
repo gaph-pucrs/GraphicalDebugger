@@ -64,7 +64,7 @@ public class OverviewTilePanel extends javax.swing.JPanel {
         
         switch(tilePlotType){
             case PLOT_ENERGY:
-                jLabelYname.setText("mJ");
+                jLabelYname.setText("nJ");
                 break;
             case PLOT_MEMORY:
                 jLabelYname.setText("#");
@@ -82,7 +82,7 @@ public class OverviewTilePanel extends javax.swing.JPanel {
     
     public void addWindowEnergyValue(float window_energy, float total_energy) {
         window_values_list.add(window_energy);
-        String t_energy = "T: "+String.format("%.2f", total_energy);
+        String t_energy = "T: "+String.format("%.2f", (total_energy/1000f))+"uJ";
         totalValueLabel.setText(t_energy);
 
         plotPanel.repaint();
@@ -101,11 +101,7 @@ public class OverviewTilePanel extends javax.swing.JPanel {
     public void openTileDetailsFrame(){
         switch(tilePlotType){
             case PLOT_ENERGY:
-                
                 new TileEnergyDetailsFrame(tileAddr, energyInfo, controlPanel);
-                
-                
-                
                 break;
             case PLOT_MEMORY:
                 new TileMemDetailsFrame(tileAddr, energyInfo, controlPanel);
@@ -261,7 +257,7 @@ public class OverviewTilePanel extends javax.swing.JPanel {
 
         jLabelYname.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelYname.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabelYname.setText("mJ");
+        jLabelYname.setText("nJ");
         add(jLabelYname);
         jLabelYname.setBounds(0, 130, 20, 15);
 

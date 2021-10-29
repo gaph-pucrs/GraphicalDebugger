@@ -142,6 +142,18 @@ public class EnergyInfo {
         return total_energy;
     }
     
+    public float computeTotalNoCEnergyWindow(int start_time, int end_time){
+        return energyNoC.getWindowEnergy(start_time, end_time);
+    }
+    
+    public float computeTotalCPUEnergyWindow(int start_time, int end_time){
+        return energyCPU.getWindowEnergy(start_time, end_time);
+    }
+    
+    public float computeTotalMemoryEnergyWindow(int start_time, int end_time){
+        return energyMemory.getWindowEnergy(start_time, end_time);
+    }
+    
     public float computeTotalTileEnergy(int tileAddr){
         float total_energy = 0f;
         
@@ -202,26 +214,6 @@ public class EnergyInfo {
     
     public float computeTileTotalNoCEnergy(int tileAddr){
         return energyNoC.getTileTotalEnergy(tileAddr);
-    }
-    
-    
-        //Just to test
-    public void printThings() {
-        /*System.out.println("Total CPU energy: "+computeTotalCPUEnergy());
-        System.out.println("Total CPU "+0+" energy: "+computeTileTotalCPUEnergy(0));
-        System.out.println("Total CPU "+256+" energy: "+computeTileTotalCPUEnergy(256));
-
-        System.out.println("\nTotal Memory energy: "+computeTotalMemoryEnergy());
-        System.out.println("Total Memory "+0+" energy: "+computeTileTotalMemoryEnergy(0));
-        System.out.println("Total Memory "+256+" energy: "+computeTileTotalMemoryEnergy(256));
-        
-        System.out.println("\nTotal Memory energy: "+computeTotalNoCEnergy());
-        System.out.println("Total Memory "+0+" energy: "+computeTileTotalNoCEnergy(0));
-        System.out.println("Total Memory "+256+" energy: "+computeTileTotalNoCEnergy(256));*/
-        
-        
-        //System.out.println("Total Tile 0 Energy: "+computeTotalTileEnergy(0));
-        //System.out.println("Total System Energy: "+computeTotalEnery());
     }
     
 }

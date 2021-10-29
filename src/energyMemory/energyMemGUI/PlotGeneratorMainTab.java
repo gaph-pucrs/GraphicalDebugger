@@ -15,6 +15,11 @@ import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import energyMemory.monitoredData.EnergyInfo;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -24,7 +29,7 @@ public class PlotGeneratorMainTab extends JPanel{
     
     private ControlPanel controlPanel;
     private EnergyInfo energyInfo;
-    private JPanel showPanel;
+    private JTextArea showTextArea;
     
     public PlotGeneratorMainTab(ControlPanel controlPanel, EnergyInfo energyInfo){
         this.controlPanel = controlPanel;
@@ -72,10 +77,24 @@ public class PlotGeneratorMainTab extends JPanel{
         //cons.weighty = 300;//this.getSize().height;
         
                 
-        showPanel = new JPanel();
-        showPanel.setBackground(Color.WHITE);
-        showPanel.setPreferredSize(new Dimension(400, this.getHeight()-300));
-        this.add(showPanel, cons);
+        
+        
+        
+        showTextArea = new JTextArea();
+        showTextArea.setBackground(Color.WHITE);
+        //showTextArea.setPreferredSize(new Dimension(400, this.getHeight()-300));
+        
+        
+        JScrollPane jp = new JScrollPane(showTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jp.getHorizontalScrollBar().setUnitIncrement(300);
+        
+        jp.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Output Log", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11))); // NOI18N
+        
+        //jp.setMinimumSize(new Dimension(100, 380));
+        //jp.setMaximumSize(new Dimension(Integer.MAX_VALUE, 380));
+        jp.setPreferredSize(new Dimension(400, this.getHeight()-300));
+        
+        this.add(jp, cons);
         
         this.revalidate();
         
@@ -83,46 +102,178 @@ public class PlotGeneratorMainTab extends JPanel{
     
     
     public void generateEnergy(int tileAddr, EnergyStatisticType energyStatistic, boolean normalized, boolean perWindow, boolean newWindow){
-        ArrayList<Float> x_series = new ArrayList<>();
+        //ArrayList<Float> x_series = new ArrayList<>();
+        ArrayList<Float> x_series_NoC = new ArrayList<>();
+        ArrayList<Float> x_series_Mem = new ArrayList<>();
+        ArrayList<Float> x_series_CPU = new ArrayList<>();
+        
         float max_y = 0f;
         
         int window_size = controlPanel.getWindowSize_Kcyles()*1000;
-        float sum = 0f;
-        float value = 0f;
+        float sumNoC = 0f;
+        float sumCPU = 0f;
+        float sumMem = 0f;
+        float noc_value = 0f;
+        float cpu_value = 0f;
+        float mem_value = 0f;
+        float value;
         
         for (int w = 0; w < (controlPanel.getNum_windows()*window_size); w+=window_size) {
             switch (energyStatistic) {
                 case TOTAL_ENERGY:
                     if (tileAddr == -1){
-                        value = (float)energyInfo.computeTotalEnergyWindow(w, w+window_size);
+                        noc_value = (float)energyInfo.computeTotalNoCEnergyWindow(w, w+window_size);
+                        cpu_value = (float)energyInfo.computeTotalCPUEnergyWindow(w, w+window_size);
+                        mem_value = (float)energyInfo.computeTotalMemoryEnergyWindow(w, w+window_size);
                     } else {
-                        value = (float)energyInfo.computeTotalTileWindowEnergy(tileAddr, w, w+window_size);
+                        noc_value = (float)energyInfo.computeTileWindowNoCEnergy(tileAddr, w, w+window_size);
+                        cpu_value = (float)energyInfo.computeTileWindowCPUEnergy(tileAddr, w, w+window_size);
+                        mem_value = (float)energyInfo.computeTileWindowMemoryEnergy(tileAddr, w, w+window_size);
                     }
                     break;
             }
+            
+            value = noc_value + cpu_value + mem_value;
+                    
             if (perWindow){
-                x_series.add(value);
+                x_series_NoC.add(noc_value);
+                x_series_CPU.add(cpu_value);
+                x_series_Mem.add(mem_value);
+                
                 if (max_y < value) max_y = value;
             }  else {
-                sum += value;
-                x_series.add(sum);
-                max_y = sum;
+                sumNoC += noc_value;
+                sumCPU += cpu_value;
+                sumMem += mem_value;
+                
+                x_series_NoC.add(sumNoC);
+                x_series_CPU.add(sumCPU);
+                x_series_Mem.add(sumMem);
+                
+                max_y = sumNoC+sumCPU+sumMem;
             }
         }
         
+        /*System.out.println(x_series_NoC);
+        System.out.println(x_series_Mem);
+        System.out.println(x_series_CPU);*/
+        String norm_cmd = "Abs";
         //Normalizes
         if (normalized){
-            for (int i = 0; i < x_series.size(); i++) {
-                value = x_series.get(i);
-                value = value / max_y;
-                x_series.set(i, value);
+            norm_cmd = "Norm";
+            for (int i = 0; i < x_series_NoC.size(); i++) {
+                noc_value = x_series_NoC.get(i);
+                cpu_value = x_series_CPU.get(i);
+                mem_value = x_series_Mem.get(i);
+                
+                max_y = noc_value + cpu_value + mem_value;
+                
+                if (max_y > 0){
+                    value = noc_value / max_y;
+                    x_series_NoC.set(i, value);
+
+                    value = cpu_value / max_y;
+                    x_series_CPU.set(i, value);
+
+                    value = mem_value / max_y;
+                    x_series_Mem.set(i, value);
+                }
             }
         }
         
         //These are the final values
-        System.out.println(x_series);
-        System.out.println(max_y);
+        //System.out.println(x_series_NoC);
+        //System.out.println(x_series_Mem);
+        //System.out.println(x_series_CPU);
+        //System.out.println(convertArrayToStringListPython(x_series_NoC));
         
+        
+        
+        String showPlot = "False";
+        if (newWindow){
+            showPlot = "True";
+        }
+        
+        if (!controlPanel.isNormalize_window()){
+            if (controlPanel.isTab_energy_enabled()){
+                max_y = controlPanel.getMaxValueEnergyTile_nJ();
+            } else {
+                max_y = controlPanel.getMaxMemoryNumber();
+            }
+        }
+        
+        String command = "python "+controlPanel.getDebugPath()+"/../../bin/bar_energy.py "+
+                convertArrayToStringListPython(x_series_NoC)+" "+
+                convertArrayToStringListPython(x_series_Mem)+" "+
+                convertArrayToStringListPython(x_series_CPU)+" "+
+                norm_cmd+" Energy "+
+                controlPanel.getWindowSize_Kcyles()+
+                " "+max_y+" "+
+                showPlot;
+        
+        
+        runCommand(command);
+    }
+    
+    
+    private void runCommand(String command){
+        System.out.println("Command: "+command);
+        
+        String message = "Executed Command: "+command;
+        
+        message += "\n\nOutput Mathplotlib Log:\n\n";
+        
+        try {
+            
+            String line = "";
+           
+            Process process = Runtime.getRuntime().exec(command);
+            
+            if (process.waitFor() != 0) {
+
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+               
+                String error_log = "";
+                while ((line = errorReader.readLine()) != null){
+                    error_log += line+"\n";
+                }
+                
+                JOptionPane.showMessageDialog(this, "Error during plot generation - Python error:\n\n"+error_log, "Error", JOptionPane.ERROR_MESSAGE);
+                errorReader.close();
+                
+            } else {
+                
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                System.out.println("Here is the standard output of the command:\n");
+                while ((line = stdInput.readLine()) != null) {
+                    message += line+"\n";
+                }
+                stdInput.close();
+            }
+            
+            process.destroy();
+
+            //Update the text area
+            showTextArea.setText(message);
+            /*if (process.exitValue() != 0) {
+                System.out.println("Abnormal process termination222");
+            }*/
+
+        } catch (Exception e) {
+        }
+    }
+    
+    
+    private String convertArrayToStringListPython(ArrayList<Float> inArray){
+        String outRet= "[";
+        for (int i = 0; i < inArray.size(); i++) {
+            Float value = inArray.get(i);
+            if (i+1 == inArray.size())
+                outRet+=Float.toString(value)+"]";
+            else
+                outRet+=Float.toString(value)+",";
+        }
+        return outRet;
     }
     
     public void generateMemory(int tileAddr, MemoryStatisticType memStatistic, boolean normalized, boolean perWindow, boolean newWindow){
@@ -133,6 +284,8 @@ public class PlotGeneratorMainTab extends JPanel{
         int window_size = controlPanel.getWindowSize_Kcyles()*1000;
         float sum = 0f;
         float value = 0f;
+        String plotName = memStatistic.text;
+        plotName = plotName.replaceAll(" ", "_");//Put underline in the spaces to avoid error in Matplotlib command line arguments
         
         for (int w = 0; w < (controlPanel.getNum_windows()*window_size); w+=window_size) {
             switch (memStatistic) {
@@ -233,18 +386,42 @@ public class PlotGeneratorMainTab extends JPanel{
             }
         }
         
-        //Normalizes
+        /*//Normalizes
         if (normalized){
             for (int i = 0; i < x_series.size(); i++) {
                 value = x_series.get(i);
                 value = value / max_y;
                 x_series.set(i, value);
             }
-        }
+        }*/
         
         //These are the final values
-        System.out.println(x_series);
-        System.out.println(max_y);
+        //System.out.println(x_series);
+        //System.out.println(max_y);
+        
+        String showPlot = "False";
+        if (newWindow){
+            showPlot = "True";
+        }
+        
+        if (!controlPanel.isNormalize_window()){
+            if (controlPanel.isTab_energy_enabled()){
+                max_y = controlPanel.getMaxValueEnergyTile_nJ();
+            } else {
+                max_y = controlPanel.getMaxMemoryNumber();
+            }
+        }
+        
+        String command = "python "+controlPanel.getDebugPath()+"/../../bin/line_mem.py "+
+                convertArrayToStringListPython(x_series)+" "+
+                "Abs"+" "+
+                plotName+" "+
+                controlPanel.getWindowSize_Kcyles()+
+                " "+max_y+" "+
+                showPlot;
+        
+        
+        runCommand(command);
         
     }
     

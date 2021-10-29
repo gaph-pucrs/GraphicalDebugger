@@ -62,7 +62,7 @@ public class OverviewMemoryTab extends javax.swing.JPanel {
         }
         
         if (controlPanel.isNormalize_window()){
-            controlPanel.setMaxAccessNumberTile(0);
+            controlPanel.setMaxMemoryNumber(0);
         }
         
         controlPanel.resetWindow();
@@ -89,7 +89,7 @@ public class OverviewMemoryTab extends javax.swing.JPanel {
             controlPanel.advanceWindow();
         }
         
-        temp_control.setMaxAccessNumberTile(controlPanel.getMaxAccessNumberTile());
+        temp_control.setMaxMemoryNumber(controlPanel.getMaxMemoryNumber());
         
         controlPanel = temp_control;*/
     }
@@ -308,8 +308,8 @@ public class OverviewMemoryTab extends javax.swing.JPanel {
                 }
                 
                 
-                if (window_value > controlPanel.getMaxAccessNumberTile() && controlPanel.isNormalize_window()){
-                    controlPanel.setMaxAccessNumberTile(window_value);
+                if (window_value > controlPanel.getMaxMemoryNumber() && controlPanel.isNormalize_window()){
+                    controlPanel.setMaxMemoryNumber(window_value);
                     window_change = true;
                 }
                 

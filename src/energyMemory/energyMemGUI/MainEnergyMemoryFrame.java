@@ -10,12 +10,14 @@ import java.io.IOException;
 import static java.lang.Thread.sleep;
 import javax.swing.JOptionPane;
 import energyMemory.monitoredData.EnergyInfo;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  *
  * @author ruaro
  */
-public class MainEnergyMemoryFrame extends javax.swing.JFrame {
+public class MainEnergyMemoryFrame extends javax.swing.JFrame{
 
     
     private ControlPanel controlPanel;
@@ -34,7 +36,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         
         this.setTitle("Energy and Memory Profiler [OpenPiton-v1.0]");
         
-        controlPanel = new ControlPanel(XDIM, YDIM);
+        controlPanel = new ControlPanel(XDIM, YDIM, debugPath);
         
         //freqjTextField.setText(Integer.toString(controlPanel.getFreq_MHz()));
         //voltjTextField.setText(Float.toString(controlPanel.getVoltagem_V()));
@@ -62,6 +64,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         jTabbedPaneEnergy.addTab("Plot Generator", new PlotGeneratorMainTab(controlPanel, energyInfo));
         
         jCheckBoxNormalized.setSelected(true);
+        jCheckBoxNormalized.setToolTipText("Normilized to the worst result among all tiles.");
         maxEnergyjTextField.setEnabled(false);
         
        
@@ -72,10 +75,10 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
     
     private void setTabEnergyEnabled(){
         controlPanel.setTab_energy_enabled();
-        y_axis_label.setText("mJoules");
+        y_axis_label.setText("nJoules");
         energyOverviewPanel.refreshPlots();
         if (!jCheckBoxNormalized.isSelected()){
-            maxEnergyjTextField.setText(Integer.toString((int)controlPanel.getMaxValueEnergyTile_mJ()));
+            maxEnergyjTextField.setText(Integer.toString((int)controlPanel.getMaxValueEnergyTile_nJ()));
         }
 
     }
@@ -85,7 +88,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         y_axis_label.setText("# access");
         memoryOverviewPanel.refreshPlots();
         if (!jCheckBoxNormalized.isSelected()){
-            maxEnergyjTextField.setText(Integer.toString((int)controlPanel.getMaxAccessNumberTile()));
+            maxEnergyjTextField.setText(Integer.toString((int)controlPanel.getMaxMemoryNumber()));
         }
     }
     
@@ -124,7 +127,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         jCheckBoxNormalized = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuReset = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItemReset = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuAbout = new javax.swing.JMenu();
 
@@ -138,6 +141,11 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jPanel1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jPanel1KeyTyped(evt);
+            }
+        });
         jPanel1.setLayout(null);
 
         applyButton.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
@@ -177,7 +185,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         maxEnergyjTextField.setBounds(220, 34, 80, 20);
 
         y_axis_label.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        y_axis_label.setText("mJoules");
+        y_axis_label.setText("nJoules");
         jPanel1.add(y_axis_label);
         y_axis_label.setBounds(300, 38, 60, 15);
 
@@ -227,14 +235,14 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
 
         jMenuReset.setText("File");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Reset");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemReset.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemReset.setText("Reset");
+        jMenuItemReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                jMenuItemResetActionPerformed(evt);
             }
         });
-        jMenuReset.add(jMenuItem1);
+        jMenuReset.add(jMenuItemReset);
 
         jMenuBar1.add(jMenuReset);
 
@@ -274,22 +282,35 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         }
     }
     
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void stopRunning(){
         controlPanel.setUpdate(false);
         stopButton.setEnabled(false);
         updateButton.setEnabled(true);
+    }
+    
+    private void jMenuItemResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemResetActionPerformed
+        stopRunning();
         resetAll();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_jMenuItemResetActionPerformed
 
     private void jTabbedPaneEnergyStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPaneEnergyStateChanged
+        boolean resumeRun = false;
+        if (controlPanel.isUpdate()){
+            resumeRun = true;
+            stopRunning();
+        }
+        
         if (jTabbedPaneEnergy.getSelectedComponent() == energyOverviewPanel){
             setTabEnergyEnabled();
         } else if (jTabbedPaneEnergy.getSelectedComponent() == memoryOverviewPanel){
             setTabMemEnabled();
         }
+        
+        if (resumeRun)
+            runSimul();
     }//GEN-LAST:event_jTabbedPaneEnergyStateChanged
 
-    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+    private void runSimul(){
         stopButton.setEnabled(true);
         updateButton.setEnabled(false);
         controlPanel.setUpdate(true);
@@ -320,16 +341,17 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
                     //break;
                 }
                 updateTiles();
-
-                //Delete, just for tests
-                energyInfo.printThings();
             }
         }.start();
-
+    }
+    
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        runSimul();
     }//GEN-LAST:event_updateButtonActionPerformed
 
-    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-         try{
+    
+    private void applyMainWindow(){
+        try{
             int new_value = Integer.parseInt(windowSizejTextField.getText());
             if (new_value <= 0 || (new_value*1000) > controlPanel.getSimultime_cycles()){
                 throw new Exception();
@@ -337,9 +359,9 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
             
             if (!controlPanel.isNormalize_window()){
                 if (controlPanel.isTab_energy_enabled()){
-                    controlPanel.setMaxValueEnergyTile_mJ(Float.parseFloat(maxEnergyjTextField.getText()));
+                    controlPanel.setMaxValueEnergyTile_nJ(Float.parseFloat(maxEnergyjTextField.getText()));
                 } else {
-                    controlPanel.setMaxAccessNumberTile(Float.parseFloat(maxEnergyjTextField.getText()));
+                    controlPanel.setMaxMemoryNumber(Float.parseFloat(maxEnergyjTextField.getText()));
                 }
             }
             
@@ -352,12 +374,14 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
         } catch (Exception e){
             JOptionPane.showMessageDialog(this, "Window Size must be a real number:\n- Higher than 0,\n- Lower than (simulation time/1000).", "Attention", JOptionPane.WARNING_MESSAGE);
         }
+    }
+    
+    private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
+        applyMainWindow();
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
-        controlPanel.setUpdate(false);
-        stopButton.setEnabled(false);
-        updateButton.setEnabled(true);
+        stopRunning();
     }//GEN-LAST:event_stopButtonActionPerformed
 
     private void jCheckBoxNormalizedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxNormalizedActionPerformed
@@ -369,14 +393,21 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
             controlPanel.setNormalize_window(false);
             maxEnergyjTextField.setEnabled(true);
             if (controlPanel.isTab_energy_enabled()){
-                maxEnergyjTextField.setText(String.format("%.2f", controlPanel.getMaxValueEnergyTile_mJ()));
+                maxEnergyjTextField.setText(String.format("%.2f", controlPanel.getMaxValueEnergyTile_nJ()));
             } else if (controlPanel.isTab_memory_enabled()){
-                maxEnergyjTextField.setText(String.format("%.2f", controlPanel.getMaxAccessNumberTile()));
+                maxEnergyjTextField.setText(String.format("%.2f", controlPanel.getMaxMemoryNumber()));
             } else {
                 maxEnergyjTextField.setText("null");
             }
         }
     }//GEN-LAST:event_jCheckBoxNormalizedActionPerformed
+
+    private void jPanel1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel1KeyTyped
+        //Not working
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            applyMainWindow();
+        }
+    }//GEN-LAST:event_jPanel1KeyTyped
 
     /**
      * @param args the command line arguments
@@ -405,7 +436,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenuAbout;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItemReset;
     private javax.swing.JMenu jMenuReset;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPaneEnergy;
