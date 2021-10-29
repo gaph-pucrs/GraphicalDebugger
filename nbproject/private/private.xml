@@ -3,7 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ruaro/GraphicalDebugger/src/source/ReadTrafficData.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/source/MainFrame.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/TileMemPlotPanel.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/TileMemDetailsFrame.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/TileEnergyPlot.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/OverviewMemoryTab.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/OverviewTilePlotPanel.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/PlotGeneratorMainTab.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/ControlPanel.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/monitoredData/EnergyInfo.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/PlotGeneratorPanel.java</file>
         </group>
     </open-files>
 </project-private>

@@ -393,8 +393,8 @@ public class PlotGeneratorMainTab extends JPanel{
                 showPlot+" "+
                 rate_average;
         
-        
         runCommand(command);
+        
         
     }
     
@@ -403,6 +403,11 @@ public class PlotGeneratorMainTab extends JPanel{
     
     private void runCommand(String command){
         //System.out.println("Command: "+command);
+        
+        if (controlPanel.getSimultime_cycles() == 0){
+            JOptionPane.showMessageDialog(this, "No data to show. Please first simulate the system or click in <Update>", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
         String message = "Executed Command: "+command;
         

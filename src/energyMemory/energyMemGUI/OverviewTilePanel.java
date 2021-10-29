@@ -9,6 +9,7 @@ import energyMemory.energyMemGUI.ControlPanel.TilePlotType;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import energyMemory.monitoredData.EnergyInfo;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -99,6 +100,11 @@ public class OverviewTilePanel extends javax.swing.JPanel {
     }
     
     public void openTileDetailsFrame(){
+        if (controlPanel.getSimultime_cycles() == 0){
+            JOptionPane.showMessageDialog(this, "No data to show. Please first simulate the system or click in <Update>", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         switch(tilePlotType){
             case PLOT_ENERGY:
                 new TileEnergyDetailsFrame(tileAddr, energyInfo, controlPanel);
