@@ -244,7 +244,7 @@ public class PlotGeneratorMainTab extends JPanel{
             } else {
                 
                 BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                System.out.println("Here is the standard output of the command:\n");
+
                 while ((line = stdInput.readLine()) != null) {
                     message += line+"\n";
                 }
