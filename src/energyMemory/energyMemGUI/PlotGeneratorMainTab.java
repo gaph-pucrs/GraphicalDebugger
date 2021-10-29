@@ -202,11 +202,19 @@ public class PlotGeneratorMainTab extends JPanel{
             }
         }
         
+        String plotName = "";
+        if (tileAddr != -1){
+            plotName = "Tile_"+(tileAddr >> 8)+"x"+(tileAddr & 0xFF)+"_Energy";
+        } else {
+            plotName = "System_Energy";
+        }
+        
         String command = "python "+controlPanel.getDebugPath()+"/../../bin/bar_energy.py "+
                 convertArrayToStringListPython(x_series_NoC)+" "+
                 convertArrayToStringListPython(x_series_Mem)+" "+
                 convertArrayToStringListPython(x_series_CPU)+" "+
-                norm_cmd+" Energy "+
+                norm_cmd+" "+
+                plotName+" "+
                 controlPanel.getWindowSize_Kcyles()+
                 " "+max_y+" "+
                 showPlot;
@@ -214,68 +222,7 @@ public class PlotGeneratorMainTab extends JPanel{
         
         runCommand(command);
     }
-    
-    
-    private void runCommand(String command){
-        //System.out.println("Command: "+command);
-        
-        String message = "Executed Command: "+command;
-        
-        message += "\n\nOutput Mathplotlib Log:\n\n";
-        
-        try {
-            
-            String line = "";
-           
-            Process process = Runtime.getRuntime().exec(command);
-            
-            if (process.waitFor() != 0) {
 
-                BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-               
-                String error_log = "";
-                while ((line = errorReader.readLine()) != null){
-                    error_log += line+"\n";
-                }
-                
-                JOptionPane.showMessageDialog(this, "Error during plot generation - Python error:\n\n"+error_log, "Error", JOptionPane.ERROR_MESSAGE);
-                errorReader.close();
-                
-            } else {
-                
-                BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-                while ((line = stdInput.readLine()) != null) {
-                    message += line+"\n";
-                }
-                stdInput.close();
-            }
-            
-            process.destroy();
-
-            //Update the text area
-            showTextArea.setText(message);
-            /*if (process.exitValue() != 0) {
-                System.out.println("Abnormal process termination222");
-            }*/
-
-        } catch (Exception e) {
-        }
-    }
-    
-    
-    private String convertArrayToStringListPython(ArrayList<Float> inArray){
-        String outRet= "[";
-        for (int i = 0; i < inArray.size(); i++) {
-            Float value = inArray.get(i);
-            if (i+1 == inArray.size())
-                outRet+=Float.toString(value)+"]";
-            else
-                outRet+=Float.toString(value)+",";
-        }
-        return outRet;
-    }
-    
     public void generateMemory(int tileAddr, MemoryStatisticType memStatistic, boolean normalized, boolean perWindow, boolean newWindow){
         
         ArrayList<Float> x_series = new ArrayList<>();
@@ -386,18 +333,6 @@ public class PlotGeneratorMainTab extends JPanel{
             }
         }
         
-        /*//Normalizes
-        if (normalized){
-            for (int i = 0; i < x_series.size(); i++) {
-                value = x_series.get(i);
-                value = value / max_y;
-                x_series.set(i, value);
-            }
-        }*/
-        
-        //These are the final values
-        //System.out.println(x_series);
-        //System.out.println(max_y);
         
         String showPlot = "False";
         if (newWindow){
@@ -412,6 +347,12 @@ public class PlotGeneratorMainTab extends JPanel{
             }
         }
         
+        if (tileAddr != -1){
+            plotName = "Tile_"+(tileAddr >> 8)+"x"+(tileAddr & 0xFF)+"_"+plotName;
+        } else {
+            plotName = "System_"+plotName;
+        }
+        
         String command = "python "+controlPanel.getDebugPath()+"/../../bin/line_mem.py "+
                 convertArrayToStringListPython(x_series)+" "+
                 "Abs"+" "+
@@ -424,5 +365,69 @@ public class PlotGeneratorMainTab extends JPanel{
         runCommand(command);
         
     }
+    
+    
+        
+    
+    private void runCommand(String command){
+        //System.out.println("Command: "+command);
+        
+        String message = "Executed Command: "+command;
+        
+        message += "\n\nOutput Mathplotlib Log:\n\n";
+        
+        try {
+            
+            String line = "";
+           
+            Process process = Runtime.getRuntime().exec(command);
+            
+            if (process.waitFor() != 0) {
+
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+               
+                String error_log = "";
+                while ((line = errorReader.readLine()) != null){
+                    error_log += line+"\n";
+                }
+                
+                JOptionPane.showMessageDialog(this, "Error during plot generation - Python error:\n\n"+error_log, "Error", JOptionPane.ERROR_MESSAGE);
+                errorReader.close();
+                
+            } else {
+                
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                while ((line = stdInput.readLine()) != null) {
+                    message += line+"\n";
+                }
+                stdInput.close();
+            }
+            
+            process.destroy();
+
+            //Update the text area
+            showTextArea.setText(message);
+            /*if (process.exitValue() != 0) {
+                System.out.println("Abnormal process termination222");
+            }*/
+
+        } catch (Exception e) {
+        }
+    }
+    
+    
+    private String convertArrayToStringListPython(ArrayList<Float> inArray){
+        String outRet= "[";
+        for (int i = 0; i < inArray.size(); i++) {
+            Float value = inArray.get(i);
+            if (i+1 == inArray.size())
+                outRet+=Float.toString(value)+"]";
+            else
+                outRet+=Float.toString(value)+",";
+        }
+        return outRet;
+    }
+    
     
 }

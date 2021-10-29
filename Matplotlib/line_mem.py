@@ -73,6 +73,11 @@ if NORMALIZED != "Norm" and "rate" not in PLOT_NAME:
         LEGEND_Y_STEP = 1
     plt.yticks(np.arange(0, MAX_Y+1, step=LEGEND_Y_STEP)) #Change step to increase the windows
 
+if "rate" in PLOT_NAME:
+    y_pos = sum(x_series_set) / len(x_series_set)
+    x1, y1 = [0, y_pos], [len(x_series_set), y_pos]
+    plt.plot(x1, y1)
+    print "Aqui"
 
 
 plt.tight_layout()
