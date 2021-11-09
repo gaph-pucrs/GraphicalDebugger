@@ -36,6 +36,7 @@ public final class ReadTrafficData {
         if (f.exists()) {
             try {
                 traffic = new RandomAccessFile(f, "r");
+                traffic.readLine();//In case of OpenPiton it discard the fist line since it just textual description of each field
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ReadTrafficData.class.getName()).log(Level.SEVERE, null, ex);
             }
