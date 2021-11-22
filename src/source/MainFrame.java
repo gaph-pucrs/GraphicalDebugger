@@ -75,7 +75,8 @@ public final class MainFrame extends javax.swing.JFrame {
         URL url = this.getClass().getResource("/icon/openpiton.png");   
         this.image_icon = Toolkit.getDefaultToolkit().getImage(url);
         this.setIconImage(image_icon);
-        this.setTitle("MPSoC Debugger [OpenPiton-v1.2]");
+        //this.setTitle("MPSoC Debugger [OpenPiton-v1.2]");
+        this.setTitle("ManyGUI [OpenPiton-v1.2]");
         //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         taskMappingFrame = null;
         mpsocConfig = null;
