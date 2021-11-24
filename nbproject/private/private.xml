@@ -11,6 +11,9 @@
             <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/TileEnergyDetailsFrame.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/TileEnergyPlot.java</file>
             <file>file:/home/ruaro/GraphicalDebugger/src/source/Roteador.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/energyMemGUI/MainEnergyMemoryFrame.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/inputReader/ReadMonitoredData.java</file>
+            <file>file:/home/ruaro/GraphicalDebugger/src/energyMemory/monitoredData/EnergyInfo.java</file>
         </group>
     </open-files>
 </project-private>
