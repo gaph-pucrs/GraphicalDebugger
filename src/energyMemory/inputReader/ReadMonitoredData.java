@@ -62,21 +62,25 @@ public class ReadMonitoredData {
                 if (line == null) {
                     return null;
                 } else {
+                    
+                    if (line.contains(";")){
 
-                    try {
-                        
-                        String[] split_data = line.split(":");
-                        
-                        String line_event = split_data[0];
-                        int time = Integer.parseInt(split_data[1]);
-                        
-                        int addr = Integer.parseInt(split_data[2]);
+                        try {
 
-                        EventInfo eventInfo = new EventInfo(line_event, time, addr);
+                            line = line.substring(0, line.length()-1);
+                            String[] split_data = line.split(":");
 
-                        return eventInfo;
+                            String line_event = split_data[0];
+                            int time = Integer.parseInt(split_data[1]);
 
-                    } catch (Exception e) {
+                            int addr = Integer.parseInt(split_data[2]);
+
+                            EventInfo eventInfo = new EventInfo(line_event, time, addr);
+
+                            return eventInfo;
+
+                        } catch (Exception e) {
+                        }
                     }
                 }
 
