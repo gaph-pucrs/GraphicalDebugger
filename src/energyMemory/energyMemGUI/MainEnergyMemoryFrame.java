@@ -47,7 +47,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         this.setPreferredSize(new Dimension(XDIM*100, YDIM*100+500));
         this.setMinimumSize(new Dimension(XDIM*200,YDIM*100+500));
         
-        String simLogPath = debugPath+"/../sim.log";
+        String simLogPath = debugPath+"/../mem_cpu_log.txt";
         String nocPath = debugPath+"/traffic_router.txt";
         
         try {

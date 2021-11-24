@@ -61,13 +61,16 @@ public class ReadMonitoredData {
                 String line = cpuAndMemReader.readLine();
                 if (line == null) {
                     return null;
-                } else if (line.contains("# ") && line.contains(":") && line.contains("-")) {
-                    String line_event = line.split(":")[0];
-                    String line_data = line.split(":")[1];
+                } else {
 
                     try {
-                        int time = Integer.parseInt(line_data.split("-")[0]);
-                        int addr = Integer.parseInt(line_data.split("-")[1]);
+                        
+                        String[] split_data = line.split(":");
+                        
+                        String line_event = split_data[0];
+                        int time = Integer.parseInt(split_data[1]);
+                        
+                        int addr = Integer.parseInt(split_data[2]);
 
                         EventInfo eventInfo = new EventInfo(line_event, time, addr);
 
