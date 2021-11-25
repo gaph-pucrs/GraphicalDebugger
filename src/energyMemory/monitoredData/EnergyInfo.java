@@ -22,6 +22,7 @@ public class EnergyInfo {
     private CounterCPU energyCPU;
     private CouterMemory energyMemory;
     private CounterNoC energyNoC;
+    private boolean errorReading;
     
     
     private ReadMonitoredData readMonitoredData;
@@ -31,6 +32,8 @@ public class EnergyInfo {
         energyCPU = new CounterCPU();
         energyMemory = new CouterMemory();
         energyNoC = new CounterNoC();
+        errorReading  = false;
+        
         
         this.readMonitoredData = new ReadMonitoredData(cpuAndMemLogPath, nocPath);
         
@@ -42,6 +45,7 @@ public class EnergyInfo {
             energyMemory = new CouterMemory();
             energyNoC = new CounterNoC();
             readMonitoredData.resetReader();
+            errorReading  = false;
         } catch (IOException ex) {
             Logger.getLogger(EnergyInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -101,7 +105,11 @@ public class EnergyInfo {
                 energyCPU.addEnergyCore(new InstructionEvent(time, ControlPanel.InstructionClass.OTHERS, addr));
                 break;
             default:
-                System.out.println("ERROR: no valid event found at line: "+ei.getName() + " time: "+time);
+                if (errorReading == false){
+                //System.out.println("ERROR: no valid event found at line: "+ei.getName() + " time: "+time);
+                    System.out.println("ManyGui: Some errors were found reading log file. Reload the tool (Ctrl+R) and read again after the simulation end.");
+                    errorReading = true;
+                }
                 break;
         }
         

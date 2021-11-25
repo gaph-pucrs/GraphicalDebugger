@@ -105,6 +105,8 @@ public final class MainFrame extends javax.swing.JFrame {
             }
             configProcess(args[0]);
         }
+        
+        percentLabel.setVisible(false);
 
     }
 
@@ -1445,6 +1447,9 @@ public final class MainFrame extends javax.swing.JFrame {
         int neighbor_arrow = -1;
         int local_arrow = -1;
         boolean local_in = false;
+        
+        //Comment (without concerns) this line if you want the the packet path keep painted. This works well in Memphis but in OpenPiton not, creating a deadlock in paiting.
+        resetAllArrows();
 
         switch (port) {
             case MPSoCConfig.NORTH1:
@@ -1539,7 +1544,6 @@ public final class MainFrame extends javax.swing.JFrame {
         }
         
         //Control the full path color
-        
         if (unfinished_packet_list.isEmpty()){
             resetAllArrows();
         }

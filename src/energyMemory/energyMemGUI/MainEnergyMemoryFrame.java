@@ -158,7 +158,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         jPanel1.add(applyButton);
         applyButton.setBounds(360, 5, 70, 27);
 
-        updateButton.setFont(updateButton.getFont().deriveFont(updateButton.getFont().getSize()-4f));
+        updateButton.setFont(updateButton.getFont().deriveFont(updateButton.getFont().getSize()-3f));
         updateButton.setText("Update");
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,7 +213,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
         jPanel1.add(jLabel10);
         jLabel10.setBounds(140, 10, 80, 15);
 
-        stopButton.setFont(stopButton.getFont().deriveFont(stopButton.getFont().getSize()-4f));
+        stopButton.setFont(stopButton.getFont().deriveFont(stopButton.getFont().getSize()-3f));
         stopButton.setText("Stop");
         stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
