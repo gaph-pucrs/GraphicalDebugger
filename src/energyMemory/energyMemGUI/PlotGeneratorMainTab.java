@@ -209,8 +209,10 @@ public class PlotGeneratorMainTab extends JPanel{
             plotName = "System_Energy";
         }
         
+        String pitonRoot = System.getenv("PITON_ROOT");
         
-        String command = "python "+controlPanel.getDebugPath()+"/../../utils/matplotlib/bar_energy.py "+
+        
+        String command = "python "+pitonRoot+"/utils/matplotlib/bar_energy.py "+
                 convertArrayToStringListPython(x_series_NoC)+" "+
                 convertArrayToStringListPython(x_series_Mem)+" "+
                 convertArrayToStringListPython(x_series_CPU)+" "+
