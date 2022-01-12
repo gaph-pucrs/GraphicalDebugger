@@ -58,9 +58,9 @@ public class PlotGeneratorPanel extends javax.swing.JPanel {
         this.mainPlotPanel = mainPlotPanel;
         this.type = type;
         initComponents();
-        this.setPreferredSize(new Dimension(100, 60));
-        this.setMinimumSize(new Dimension(100, 60));
-        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        this.setPreferredSize(new Dimension(100, 125));
+        this.setMinimumSize(new Dimension(100, 125));
+        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, 125));
         
         switch(type){
             case ENERGY:
