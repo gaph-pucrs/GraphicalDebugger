@@ -83,9 +83,31 @@ public class OverviewTilePanel extends javax.swing.JPanel {
     
     public void addWindowEnergyValue(float window_energy, float total_energy) {
         window_values_list.add(window_energy);
-        String t_energy = "T: "+String.format("%.2f", (total_energy/1000f))+"uJ";
+        
+        String unit = "uJ";
+        total_energy = total_energy / 1000f;
+        
+        if (total_energy >= 1000){
+            total_energy = total_energy / 1000f;
+            unit = "mJ";
+            
+            if (total_energy >= 1000){
+                total_energy = total_energy / 1000f;
+                unit = "J";
+                
+                if (total_energy >= 1000){
+                    total_energy = total_energy / 1000f;
+                    unit = "kJ";
+                } 
+            } 
+        }  
+        
+        
+        String t_energy = "T: "+String.format("%.2f", (total_energy))+unit;
+        
+        
         totalValueLabel.setText(t_energy);
-
+        totalValueLabel.setToolTipText(t_energy);
         plotPanel.repaint();
         
     }
@@ -93,8 +115,9 @@ public class OverviewTilePanel extends javax.swing.JPanel {
     public void addWindowMemoryValue(float window_memory, float total_memory) {
         window_values_list.add(window_memory);
         String t_energy = "T: "+String.format("%.2f", total_memory);
+        
         totalValueLabel.setText(t_energy);
-
+        totalValueLabel.setToolTipText(t_energy);
         plotPanel.repaint();
         
     }

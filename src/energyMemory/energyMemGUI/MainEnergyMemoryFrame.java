@@ -7,11 +7,9 @@ package energyMemory.energyMemGUI;
 
 import java.awt.Dimension;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
 import javax.swing.JOptionPane;
 import energyMemory.monitoredData.EnergyInfo;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 /**
  *
@@ -34,7 +32,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
     public MainEnergyMemoryFrame(int XDIM, int YDIM, String debugPath) {
         initComponents();
         
-        this.setTitle("Energy and Memory Profiler [OpenPiton-v1.0]");
+        this.setTitle("Energy and Memory Profiler [OpenPiton-v1.1]");
         
         controlPanel = new ControlPanel(XDIM, YDIM, debugPath);
         
@@ -324,7 +322,7 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
                     time = energyInfo.getNextEvent();
 
                     if (time == 0){
-                        try { sleep(200); } catch (Exception ex) {}
+                        //try { sleep(200); } catch (Exception ex) {}
                         continue;
                     }
 
@@ -333,12 +331,9 @@ public class MainEnergyMemoryFrame extends javax.swing.JFrame{
                     if (time > controlPanel.getMax_window_time()){
                         updateTiles();
                         controlPanel.advanceWindow();
-                        //try { sleep(500); } catch (Exception ex) {}
                     }
                     simulTimejLabel.setText(String.valueOf(time));
                     //simulTimejLabel.setText(new DecimalFormat("0.00000").format(((float) (time * controlPanel.getClockPeriodInNs() / 1000.0f / 1000.0f))) + " ms");
-                    //try { sleep(200); } catch (Exception ex) {}
-                    //break;
                 }
                 updateTiles();
             }

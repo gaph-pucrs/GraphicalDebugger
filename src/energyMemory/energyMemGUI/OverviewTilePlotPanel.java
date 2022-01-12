@@ -89,12 +89,12 @@ public class OverviewTilePlotPanel extends JPanel implements MouseMotionListener
         
         //int line_offset = width/max_windows;
         float line_offset = ((float)width)/((float)max_windows);
-        float x1, y1, x2, y2;
         
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //Draw the vertical dashed lines
-        if (max_windows*3 < width){
+        //float x1, y1, x2, y2;
+        /*if (max_windows*3 < width){
             //Draw the dashed lines
             float dashWidth[] = {5.0f};
             BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dashWidth, 0.0f);
@@ -109,7 +109,7 @@ public class OverviewTilePlotPanel extends JPanel implements MouseMotionListener
                 g2d.draw(l);
             }
         }
-        g2d.dispose();
+        g2d.dispose();*/
         
         
         //Draw the bars
